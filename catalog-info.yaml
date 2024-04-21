@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: jamf-apple-natives-template
+  description: A template repository for Apple Natives teams at Jamf
+  tags:
+  - swift
+spec:
+  type: application
+  lifecycle: production
+  owner: apple-natives-admin
+  system: apple-natives-applications
