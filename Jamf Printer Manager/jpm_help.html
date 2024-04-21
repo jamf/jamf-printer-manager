@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+        h1 {text-align: center;}
+        p {text-align: left;}
+        div {text-align: left;}
+        span {vertical-align: middle;}
+        .box {
+                display: flex;
+                align-items:center;
+            }
+        </style>
+        <title>Jamf Printer Manager Help</title>
+    </head>
+    <body>
+        <h1>Jamf Printer Manager Help</h1>
+
+        <p>Use Jamf Printer Manager to add/remove/modify printers on your Jamf Pro Server</p>
+        <img src="./app.png" alt="Jamf Printer Manager">
+
+        <p>After the app finishes launching you will get a list of locally installed printers (that are not available in Jamf Pro) on the left and a list of printers currently available for deployment on the right.</p>
+
+       <h3>Adding printers to Jamf Pro:</h3>
+       <p>Printers can be added by either:</p>
+       <ul>
+        <li>Double clicking a printer from the list on the left.</li>
+        <li>Selecting one or more printers from the list on the left and clicking the Add button.</li>
+	   </ul>
+        <p>Be sure to select a category for the added printer(s) to have that set in Jamf Pro, if desired.</p>
+
+        <h3>Removing printers from Jamf Pro:</h3>
+        <p>Select one or more printers to be removed from Jamf Pro, then either select the '-' button or hit the delete key on the keyboard.
+            You will be presented with a confirmation dialog to verify the removal:</p>
+        <img src="./removePrinter.png" alt="Remove">
+        <p>
+            <div style='vertical-align:middle; display:inline;'>
+                Note, the local printers available list (left table) does not automatically update as printers are removed from Jamf Pro.  If you remove a printer from Jamf Pro and would like it listed again in the list of printers that can be added, click the refresh button:
+            </div>
+            <img style='vertical-align:middle;' src='./refresh.png' alt="Refresh">
+        <br>
+        The printer must be installed locally to reappear in the list.</p>
+
+        <h3>Modifying a printer in Jamf Pro:</h3>
+       <p>Printer properites can be modified for printers currently available in Jamf Pro.
+        Double click a printer from the list on the right.  You will be presented with a new window that allows modifications:</p>
+        <img src="./modify.png" alt="Modify">
+        <p>Note, there are 3 different tabs available for modifying the printer properties; General, Definition, and Limitations, similar to what is available in Jamf Pro.</p>
+        
+        <p>The category for one or more existing printers can be changed by selecting the printer(s) then right-clicking.</p>
+        <img src="./massAction.png" alt="change category">
+    
+        <p>To manage printers on another server click the 'Change Server' button located in the top right corner of the mail window.  Either select an existing printer or add a new one.</p>
+        <p>If you find a server listed in the login window that you would like to remove select it while holding down the option key.</p>
+        <img src="./removeServer.png" alt="Remove Server">
+
+    </body>
+</html>

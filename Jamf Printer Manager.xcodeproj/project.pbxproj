@@ -1,0 +1,498 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B544852B29F518D4002A70AC /* PrinterInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B544852A29F518D4002A70AC /* PrinterInfoVC.swift */; };
+		B544852D29F5B234002A70AC /* PrinterInfoTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B544852C29F5B234002A70AC /* PrinterInfoTabVC.swift */; };
+		B5468A2B2B477F0F007EAD10 /* CupsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5468A2A2B477F0F007EAD10 /* CupsParser.swift */; };
+		B55866C72AF0101B0069FF98 /* TokenDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55866C62AF0101B0069FF98 /* TokenDelegate.swift */; };
+		B594A3462A09B9E800DB21CC /* HelpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B594A3452A09B9E800DB21CC /* HelpVC.swift */; };
+		B594A35B2A09C38100DB21CC /* jpm_help.html in Resources */ = {isa = PBXBuildFile; fileRef = B594A35A2A09C38100DB21CC /* jpm_help.html */; };
+		B59F0E422B8FF9F500902972 /* ToUVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59F0E412B8FF9F500902972 /* ToUVC.swift */; };
+		B5CA15E52A09FDB900CC4754 /* blankURL.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CA15E02A09FDB800CC4754 /* blankURL.png */; };
+		B5CA15E62A09FDB900CC4754 /* modify.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CA15E12A09FDB800CC4754 /* modify.png */; };
+		B5CA15E72A09FDB900CC4754 /* removeServer.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CA15E22A09FDB800CC4754 /* removeServer.png */; };
+		B5CA15E82A09FDB900CC4754 /* removePrinter.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CA15E32A09FDB800CC4754 /* removePrinter.png */; };
+		B5CA15E92A09FDB900CC4754 /* app.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CA15E42A09FDB900CC4754 /* app.png */; };
+		B5CA15EB2A0A02BB00CC4754 /* AboutVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5CA15EA2A0A02BB00CC4754 /* AboutVC.swift */; };
+		B5CA15ED2A0A6B8E00CC4754 /* refresh.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CA15EC2A0A6B8E00CC4754 /* refresh.png */; };
+		B5CA15F02A0B9E1200CC4754 /* massAction.png in Resources */ = {isa = PBXBuildFile; fileRef = B5CA15EF2A0B9E1200CC4754 /* massAction.png */; };
+		B5FB633529E846D500451F69 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB633429E846D500451F69 /* Globals.swift */; };
+		B5FB633729E8494E00451F69 /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB633629E8494E00451F69 /* LoginVC.swift */; };
+		B5FB633929E84BEB00451F69 /* Logging.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB633829E84BEB00451F69 /* Logging.swift */; };
+		B5FB633B29E84C4400451F69 /* WriteToLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB633A29E84C4300451F69 /* WriteToLog.swift */; };
+		B5FB633D29E84CA200451F69 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB633C29E84CA200451F69 /* Credentials.swift */; };
+		B5FB634129E84E9500451F69 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB634029E84E9500451F69 /* Alert.swift */; };
+		B5FB634329E86F7200451F69 /* XmlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB634229E86F7200451F69 /* XmlDelegate.swift */; };
+		B5FB634529E886CA00451F69 /* XmlParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB634429E886CA00451F69 /* XmlParser.swift */; };
+		B5FB634729E8CB3800451F69 /* AddPrinterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB634629E8CB3800451F69 /* AddPrinterVC.swift */; };
+		CE6DAF2729A0958400305A04 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DAF2629A0958400305A04 /* AppDelegate.swift */; };
+		CE6DAF2929A0958400305A04 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DAF2829A0958400305A04 /* ViewController.swift */; };
+		CE6DAF2B29A0958500305A04 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE6DAF2A29A0958500305A04 /* Assets.xcassets */; };
+		CE6DAF2E29A0958500305A04 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6DAF2C29A0958500305A04 /* Main.storyboard */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B51E2EDE2A046D7B00C049D0 /* Notes */ = {isa = PBXFileReference; lastKnownFileType = text; path = Notes; sourceTree = "<group>"; };
+		B544852A29F518D4002A70AC /* PrinterInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrinterInfoVC.swift; sourceTree = "<group>"; };
+		B544852C29F5B234002A70AC /* PrinterInfoTabVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrinterInfoTabVC.swift; sourceTree = "<group>"; };
+		B5468A2A2B477F0F007EAD10 /* CupsParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CupsParser.swift; sourceTree = "<group>"; };
+		B55866C62AF0101B0069FF98 /* TokenDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenDelegate.swift; sourceTree = "<group>"; };
+		B594A3452A09B9E800DB21CC /* HelpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpVC.swift; sourceTree = "<group>"; };
+		B594A35A2A09C38100DB21CC /* jpm_help.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jpm_help.html; sourceTree = "<group>"; };
+		B59F0E412B8FF9F500902972 /* ToUVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToUVC.swift; sourceTree = "<group>"; };
+		B5CA15E02A09FDB800CC4754 /* blankURL.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blankURL.png; sourceTree = "<group>"; };
+		B5CA15E12A09FDB800CC4754 /* modify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = modify.png; sourceTree = "<group>"; };
+		B5CA15E22A09FDB800CC4754 /* removeServer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removeServer.png; sourceTree = "<group>"; };
+		B5CA15E32A09FDB800CC4754 /* removePrinter.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = removePrinter.png; sourceTree = "<group>"; };
+		B5CA15E42A09FDB900CC4754 /* app.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = app.png; sourceTree = "<group>"; };
+		B5CA15EA2A0A02BB00CC4754 /* AboutVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutVC.swift; sourceTree = "<group>"; };
+		B5CA15EC2A0A6B8E00CC4754 /* refresh.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh.png; sourceTree = "<group>"; };
+		B5CA15EF2A0B9E1200CC4754 /* massAction.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = massAction.png; sourceTree = "<group>"; };
+		B5F3EF0329F6ECE3008927FF /* Jamf-Printer-Manager-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Jamf-Printer-Manager-Info.plist"; sourceTree = SOURCE_ROOT; };
+		B5FB633429E846D500451F69 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
+		B5FB633629E8494E00451F69 /* LoginVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		B5FB633829E84BEB00451F69 /* Logging.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logging.swift; sourceTree = "<group>"; };
+		B5FB633A29E84C4300451F69 /* WriteToLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WriteToLog.swift; sourceTree = "<group>"; };
+		B5FB633C29E84CA200451F69 /* Credentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
+		B5FB634029E84E9500451F69 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
+		B5FB634229E86F7200451F69 /* XmlDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XmlDelegate.swift; sourceTree = "<group>"; };
+		B5FB634429E886CA00451F69 /* XmlParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XmlParser.swift; sourceTree = "<group>"; };
+		B5FB634629E8CB3800451F69 /* AddPrinterVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPrinterVC.swift; sourceTree = "<group>"; };
+		CE6DAF2329A0958400305A04 /* Jamf Printer Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jamf Printer Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CE6DAF2629A0958400305A04 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		CE6DAF2829A0958400305A04 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		CE6DAF2A29A0958500305A04 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CE6DAF2D29A0958500305A04 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CE6DAF2F29A0958500305A04 /* Jamf_Printer_Manager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Jamf_Printer_Manager.entitlements; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		CE6DAF2029A0958400305A04 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B568542529FAB8230004630D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B594A3532A09C26700DB21CC /* images */ = {
+			isa = PBXGroup;
+			children = (
+				B5CA15EC2A0A6B8E00CC4754 /* refresh.png */,
+				B5CA15E42A09FDB900CC4754 /* app.png */,
+				B5CA15E02A09FDB800CC4754 /* blankURL.png */,
+				B5CA15EF2A0B9E1200CC4754 /* massAction.png */,
+				B5CA15E12A09FDB800CC4754 /* modify.png */,
+				B5CA15E32A09FDB800CC4754 /* removePrinter.png */,
+				B5CA15E22A09FDB800CC4754 /* removeServer.png */,
+			);
+			path = images;
+			sourceTree = "<group>";
+		};
+		CE6DAF1A29A0958400305A04 = {
+			isa = PBXGroup;
+			children = (
+				B51E2EDE2A046D7B00C049D0 /* Notes */,
+				CE6DAF2529A0958400305A04 /* Jamf Printer Manager */,
+				CE6DAF2429A0958400305A04 /* Products */,
+				B568542529FAB8230004630D /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		CE6DAF2429A0958400305A04 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CE6DAF2329A0958400305A04 /* Jamf Printer Manager.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CE6DAF2529A0958400305A04 /* Jamf Printer Manager */ = {
+			isa = PBXGroup;
+			children = (
+				B5CA15EA2A0A02BB00CC4754 /* AboutVC.swift */,
+				B5FB634629E8CB3800451F69 /* AddPrinterVC.swift */,
+				B5FB634029E84E9500451F69 /* Alert.swift */,
+				CE6DAF2629A0958400305A04 /* AppDelegate.swift */,
+				B5FB633C29E84CA200451F69 /* Credentials.swift */,
+				B5FB633429E846D500451F69 /* Globals.swift */,
+				B594A3452A09B9E800DB21CC /* HelpVC.swift */,
+				B5FB633829E84BEB00451F69 /* Logging.swift */,
+				B5FB633629E8494E00451F69 /* LoginVC.swift */,
+				B544852A29F518D4002A70AC /* PrinterInfoVC.swift */,
+				B544852C29F5B234002A70AC /* PrinterInfoTabVC.swift */,
+				B55866C62AF0101B0069FF98 /* TokenDelegate.swift */,
+				B59F0E412B8FF9F500902972 /* ToUVC.swift */,
+				CE6DAF2829A0958400305A04 /* ViewController.swift */,
+				B5FB633A29E84C4300451F69 /* WriteToLog.swift */,
+				B5FB634229E86F7200451F69 /* XmlDelegate.swift */,
+				B5FB634429E886CA00451F69 /* XmlParser.swift */,
+				B5468A2A2B477F0F007EAD10 /* CupsParser.swift */,
+				CE6DAF2A29A0958500305A04 /* Assets.xcassets */,
+				B594A35A2A09C38100DB21CC /* jpm_help.html */,
+				B594A3532A09C26700DB21CC /* images */,
+				CE6DAF2C29A0958500305A04 /* Main.storyboard */,
+				CE6DAF2F29A0958500305A04 /* Jamf_Printer_Manager.entitlements */,
+				B5F3EF0329F6ECE3008927FF /* Jamf-Printer-Manager-Info.plist */,
+			);
+			path = "Jamf Printer Manager";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		CE6DAF2229A0958400305A04 /* Jamf Printer Manager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE6DAF3229A0958500305A04 /* Build configuration list for PBXNativeTarget "Jamf Printer Manager" */;
+			buildPhases = (
+				CE6DAF1F29A0958400305A04 /* Sources */,
+				CE6DAF2029A0958400305A04 /* Frameworks */,
+				CE6DAF2129A0958400305A04 /* Resources */,
+				B5CA15EE2A0B9A3000CC4754 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Jamf Printer Manager";
+			productName = "Jamf Printer Manager";
+			productReference = CE6DAF2329A0958400305A04 /* Jamf Printer Manager.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		CE6DAF1B29A0958400305A04 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1420;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					CE6DAF2229A0958400305A04 = {
+						CreatedOnToolsVersion = 14.2;
+					};
+				};
+			};
+			buildConfigurationList = CE6DAF1E29A0958400305A04 /* Build configuration list for PBXProject "Jamf Printer Manager" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = CE6DAF1A29A0958400305A04;
+			productRefGroup = CE6DAF2429A0958400305A04 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				CE6DAF2229A0958400305A04 /* Jamf Printer Manager */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CE6DAF2129A0958400305A04 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE6DAF2B29A0958500305A04 /* Assets.xcassets in Resources */,
+				B5CA15E82A09FDB900CC4754 /* removePrinter.png in Resources */,
+				CE6DAF2E29A0958500305A04 /* Main.storyboard in Resources */,
+				B5CA15E92A09FDB900CC4754 /* app.png in Resources */,
+				B5CA15E72A09FDB900CC4754 /* removeServer.png in Resources */,
+				B5CA15E62A09FDB900CC4754 /* modify.png in Resources */,
+				B5CA15E52A09FDB900CC4754 /* blankURL.png in Resources */,
+				B5CA15F02A0B9E1200CC4754 /* massAction.png in Resources */,
+				B5CA15ED2A0A6B8E00CC4754 /* refresh.png in Resources */,
+				B594A35B2A09C38100DB21CC /* jpm_help.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B5CA15EE2A0B9A3000CC4754 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "newMajor=\"$(date -u +%Y%m%d)\"\ndate24H=$(date -u +%H%M)\ntmpMinor=$(printf \"%x\\n\" $(echo $date24H | sed 's/^0*//'))\nnewMinor=$(echo $tmpMinor | tr '[:lower:]' '[:upper:]')\nnewBuildNumber=\"$newMajor-$newMinor\"\n\n## create folder to hold exported app\nshortVer=\"v${MARKETING_VERSION}\"\nexeName=\"${EXECUTABLE_NAME}\"\nbuildDir=\"/Users/lesliehelou/Documents/Travel/- Projects/$exeName/$shortVer/\"\n\nif [ ! -d \"$buildDir\" ];then\n    mkdir -p \"$buildDir\"\nfi\n\n##/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $newBuildNumber\"  \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $newBuildNumber\" \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Contents/Info.plist\"\n\n## remove extended attributes (from added images)\n/usr/bin/xattr -cr \"${BUILT_PRODUCTS_DIR}/${WRAPPER_NAME}/Contents/Resources\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		CE6DAF1F29A0958400305A04 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CE6DAF2929A0958400305A04 /* ViewController.swift in Sources */,
+				B544852D29F5B234002A70AC /* PrinterInfoTabVC.swift in Sources */,
+				CE6DAF2729A0958400305A04 /* AppDelegate.swift in Sources */,
+				B594A3462A09B9E800DB21CC /* HelpVC.swift in Sources */,
+				B5FB633729E8494E00451F69 /* LoginVC.swift in Sources */,
+				B5FB634529E886CA00451F69 /* XmlParser.swift in Sources */,
+				B5FB633D29E84CA200451F69 /* Credentials.swift in Sources */,
+				B5FB634729E8CB3800451F69 /* AddPrinterVC.swift in Sources */,
+				B55866C72AF0101B0069FF98 /* TokenDelegate.swift in Sources */,
+				B5FB633B29E84C4400451F69 /* WriteToLog.swift in Sources */,
+				B5468A2B2B477F0F007EAD10 /* CupsParser.swift in Sources */,
+				B544852B29F518D4002A70AC /* PrinterInfoVC.swift in Sources */,
+				B5FB633929E84BEB00451F69 /* Logging.swift in Sources */,
+				B5FB633529E846D500451F69 /* Globals.swift in Sources */,
+				B5FB634329E86F7200451F69 /* XmlDelegate.swift in Sources */,
+				B59F0E422B8FF9F500902972 /* ToUVC.swift in Sources */,
+				B5CA15EB2A0A02BB00CC4754 /* AboutVC.swift in Sources */,
+				B5FB634129E84E9500451F69 /* Alert.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CE6DAF2C29A0958500305A04 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE6DAF2D29A0958500305A04 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		CE6DAF3029A0958500305A04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		CE6DAF3129A0958500305A04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		CE6DAF3329A0958500305A04 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Jamf Printer Manager/Jamf_Printer_Manager.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 483DWKW443;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Jamf-Printer-Manager-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Jamf Printer Manager";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.ce.printermanager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		CE6DAF3429A0958500305A04 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Jamf Printer Manager/Jamf_Printer_Manager.entitlements";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = 483DWKW443;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Jamf-Printer-Manager-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Jamf Printer Manager";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.ce.printermanager;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		CE6DAF1E29A0958400305A04 /* Build configuration list for PBXProject "Jamf Printer Manager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE6DAF3029A0958500305A04 /* Debug */,
+				CE6DAF3129A0958500305A04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CE6DAF3229A0958500305A04 /* Build configuration list for PBXNativeTarget "Jamf Printer Manager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE6DAF3329A0958500305A04 /* Debug */,
+				CE6DAF3429A0958500305A04 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = CE6DAF1B29A0958400305A04 /* Project object */;
+}
