@@ -11,7 +11,6 @@ class HelpVC: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
         
         let   filePath = Bundle.main.path(forResource: "jpm_help", ofType: "html")
         let folderPath = Bundle.main.resourcePath

@@ -37,10 +37,8 @@ class Credentials {
                                                         kSecAttrAccount as String: account,
                                                         kSecValueData as String: password]
                     
-                    // see if credentials already exist for server
                     let accountCheck = retrieve(service: service, account: account)
                     if accountCheck.count == 0 {
-                        // try to add new credentials, if account exists we'll try updating it
                         let addStatus = SecItemAdd(keychainQuery as CFDictionary, nil)
                         if (addStatus != errSecSuccess) {
                             if let addErr = SecCopyErrorMessageString(addStatus, nil) {
@@ -57,7 +55,6 @@ class Credentials {
                             }
                         }
                     } else {
-                        // credentials already exist, try to update
                         keychainQuery = [kSecClass as String: kSecClassGenericPasswordString,
                                          kSecAttrService as String: keychainItemName,
                                          kSecMatchLimit as String: kSecMatchLimitOne,
@@ -65,12 +62,9 @@ class Credentials {
                         
                         for (username, password) in accountCheck {
                             if account != username || credential != password {
-                                // credentials already exist, try to update
                                 if account == username {
                                     let updateStatus = SecItemUpdate(keychainQuery as CFDictionary, [kSecValueDataString:password] as [NSString : Any] as CFDictionary)
-//                                    print("[Credentials.save] updateStatus result: \(updateStatus)")
                                 } else {
-//                                    print("[addStatus] save password for: \(account)")
                                     let addStatus = SecItemAdd(keychainQuery as CFDictionary, nil)
                                     if (addStatus != errSecSuccess) {
                                         if let addErr = SecCopyErrorMessageString(addStatus, nil) {
@@ -89,23 +83,19 @@ class Credentials {
     func retrieve(service: String, account: String, whichServer: String = "") -> [String:String] {
         var keychainResult = [String:String]()
         var theService     = service
-//        var keychainName   = "JSK-\(service)"
         
         if useApiClient == 1 {
             theService = "apiClient-" + theService
         }
         var keychainItemName = sharedPrefix + "-" + theService
-//        print("[credentials] lookup for \(account), keychainItemName: \(keychainItemName)")
-        // look for common keychain item
+
         keychainResult = itemLookup(service: keychainItemName)
         
         return keychainResult
     }
     
     private func itemLookup(service: String) -> [String:String] {
-        
-//        print("[Credentials.itemLookup] start search for: \(service)")
-   
+           
         let keychainQuery: [String: Any] = [kSecClass as String: kSecClassGenericPasswordString,
                                             kSecAttrService as String: service,
                                             kSecAttrAccessGroup as String: accessGroup,
@@ -134,8 +124,6 @@ class Credentials {
                 userPassDict[account] = password ?? ""
             }
         }
-
-//        print("[Credentials.itemLookup] keychain item count: \(userPassDict.count) for \(service)")
         return userPassDict
     }
 }

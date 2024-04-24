@@ -9,7 +9,6 @@ class WriteToLog {
     private init() { }
     
     func message(stringOfText: String) {
-//        print("\(getCurrentTime()) \(stringOfText)")
 
          let logString = "\(getCurrentTime()) \(stringOfText)\n"
 

@@ -23,7 +23,6 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
     var newPrinterArray = [PrinterInfo]()
     var editPrinterInfo = PrinterInfo(id: "", name: "", category: "", uri: "", cups_name: "", location: "", model: "", make_default: "", shared: "", info: "", notes: "", use_generic: "", ppd: "", ppd_contents: "", ppd_path: "", os_req: "")
     
-    // general
     @IBOutlet weak var displayName_TextField: NSTextField!
     @IBOutlet weak var category_Button: NSPopUpButton!
     @IBOutlet weak var category_Menu: NSMenu!
@@ -41,7 +40,6 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
     @IBOutlet var notes_TextView: NSTextView!
     @IBOutlet weak var save_Button: NSButton!
     
-    // definition
     @IBOutlet weak var cupsName_TextField: NSTextField!
     @IBOutlet var model_TextField: NSTextField!
     @IBOutlet var location_TextField: NSTextField!
@@ -75,7 +73,7 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
     @IBAction func uploadPPD_Action(_ sender: Any) {
         
         let dialog = NSOpenPanel()
-        // modify info.plist first
+
         let fileType = UTType(exportedAs: "postscript.driver", conformingTo: .text)
 
         dialog.title                   = "Select a PPD file";
@@ -86,14 +84,13 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
         dialog.allowsOtherFileTypes    = false
         dialog.canChooseFiles          = true
         dialog.canChooseDirectories    = false
-        dialog.allowedContentTypes     = [fileType]   // needs import UniformTypeIdentifiers
+        dialog.allowedContentTypes     = [fileType]
 
         if (dialog.runModal() ==  NSApplication.ModalResponse.OK) {
-            let result = dialog.url // Pathname of the file
+            let result = dialog.url 
             
             if (result != nil) {
                 let path: String = result!.path
-//                print("selected file: \(path)")
                 ppdPath_TextField.stringValue = path
                 editPrinterInfo.ppd_path          = path
                 editPrinterInfo.ppd               = result!.lastPathComponent
@@ -103,21 +100,14 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
         }
     }
         
-    // limitations
     @IBOutlet var osRequirement_TextField: NSTextField!
     
     @IBAction func update_Action(_ sender: Any) {
-        // add printer
         if saveEnabled {
             saveEnabled = false
             editPrinterInfo.make_default = (editPrinterInfo.make_default == "0") ? "false":"true"
             editPrinterInfo.use_generic  = (editPrinterInfo.use_generic == "0") ? "false":"true"
-//            editPrinterInfo.ppd_contents = editPrinterInfo.ppd_contents.xmlEncode
             editPrinterInfo.category     = ( editPrinterInfo.category == "None" ) ? "":editPrinterInfo.category
-            
-            //        if editPrinterInfo.name != printerInfoDict["name"] as! String {
-            //            printerInfoDict["name"] = editPrinterInfo.name as AnyObject
-            //        }
             
             let printerXML = """
 <?xml version="1.0" encoding="UTF-8"?>
@@ -139,10 +129,9 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
     <os_requirements>\(editPrinterInfo.os_req)</os_requirements>
 </printer>
 """
-            //        print("updated printer \(editPrinterInfo.name): \(printerXML)")
+
             XmlDelegate.shared.apiAction(method: "PUT", theEndpoint: "printers/id/\(editPrinterInfo.id)", xmlData: printerXML) { [self]
                 (result: (Int,Any)) in
-                //                    print("api result: \(result)")
                 let (statusCode, httpReply) = result
                 if statusCode > 299 {
                     print("reply: \(httpReply)")
@@ -153,11 +142,7 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
                 } else {
                     WriteToLog.shared.message(stringOfText: "\(editPrinterInfo.name) as been updated")
                     
-                    //                print("[PrinterInfoTabVC] update printer \(editPrinterInfo.name)")
-                    //                print("[PrinterInfoTabVC] update printer \(editPrinterInfo.category)")
                     existingPrintersArray = existingPrintersArray.map { $0.id == editPrinterInfo.id ? editPrinterInfo : $0 }
-                    //                newPrinterArray = newPrinterArray.map { $0.name == editPrinterInfo.name ? editPrinterInfo : $0 }
-                    //                existingPrintersArray = newPrinterArray
                     NotificationCenter.default.post(name: .updatedPrintersNotification, object: nil)
                 }
                 saveEnabled = true
@@ -252,7 +237,7 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
                 category_Button.addItem(withTitle: "None")
                 category_Button.addItems(withTitles: listOfCategories)
                 category_Menu.insertItem(NSMenuItem.separator(), at: 1)
-//                print("editPrinter.category: \(editPrinter.category)")
+
                 if editPrinterInfo.category == "No category assigned" {
                     editPrinterInfo.category = "None"
                 }

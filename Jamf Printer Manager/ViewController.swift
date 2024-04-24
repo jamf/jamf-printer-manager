@@ -5,7 +5,7 @@
 import AppKit
 import Cocoa
 import Foundation
-import UniformTypeIdentifiers   // for restrictin file types in NSOpenPanel
+import UniformTypeIdentifiers
 
 class PrinterInfo: NSObject {
     @objc var id           : String
@@ -77,19 +77,16 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
             removePrinter_Button.isEnabled       = true
             existingPrinters_TableView.isEnabled = true
         } else {
-            // remove printer(s)
             print("\(selectedPrinters.count) to be removed")
             var removedPrinters = 0
             var removeMessage = ""
             existingPrintersArray = existingPrinters_AC.arrangedObjects as! [PrinterInfo]
             for selectedIndex in selectedPrinters {
-//                print("selected: \(existingPrintersArray[selectedIndex].name)")
                 removeMessage.append("\(existingPrintersArray[selectedIndex].name)\n")
             }
             let oneOrMore = ( selectedPrinters.count == 1 ) ? "printer":"printers"
             let removeReply = Alert.shared.display(header: "Attention:", message: "The following \(oneOrMore) will be removed from Jamf Pro:\n\(removeMessage)", secondButton: "Cancel")
             
-//            print("removeReply: \(removeReply)")
             if removeReply == "Cancel" {
                 removePrinter_Button.isEnabled       = true
                 existingPrinters_TableView.isEnabled = true
@@ -97,7 +94,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 var indexSetToArray = [Int]()
                 for selectedIndex in selectedPrinters {
                     indexSetToArray.append(selectedIndex)
-                }   // for selectedIndex in selectedPrinters - end
+                }
                 indexSetToArray = indexSetToArray.sorted()
                 removePrinter(selectedIndex: 0, selectedPrinters: indexSetToArray, removedPrinters: 0)
             }
@@ -110,7 +107,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         let printerName = existingPrintersArray[selectedPrinters[selectedIndex]].name
         XmlDelegate.shared.apiAction(method: "DELETE", theEndpoint: "printers/id/\(printerId)") { [self]
             (result: (Int,Any)) in
-//            print("api result: \(result)")
+
             let (statusCode, httpReply) = result
             if statusCode > 299 {
                 WriteToLog.shared.message(stringOfText: "Failed to remover printer: \(printerName)")
@@ -125,7 +122,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 WriteToLog.shared.message(stringOfText: "\(printerName) has been removed from \(JamfProServer.destination)")
                 existingPrinters_AC.remove(atArrangedObjectIndex: selectedPrinters[selectedIndex]-removedPrinters)
                 existingPrinters_AC.rearrangeObjects()
-//                existingPrintersDict[printerId] = nil
+
                 removed += 1
             }
             if selectedIndex == selectedPrinters.count-1 {
@@ -142,14 +139,10 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
     
     @objc func updateCategory(sender: NSMenuItem) {
         
-//        print("new category: \(String(describing: sender.title))")
-
         let selectedPrinters = existingPrinters_TableView.selectedRowIndexes
             if selectedPrinters.count < 1 {
                 _ = Alert.shared.display(header: "Attention:", message: "At least one printer must be selected.", secondButton: "")
             } else {
-                // update printer category
-//                existingPrinters_TableView.isEnabled = false
                 var updatedPrinters = 0
                 
                 var indexSetToArray = [Int]()
@@ -163,7 +156,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
     func updateCategory_Action(arrayIndex: Int, selectedPrinters: [Int], selectedCategory: String, updatedPrinters: Int) {
         var updated       = updatedPrinters
         let selectedIndex = selectedPrinters[arrayIndex]
-//                print("selected: \(localPrintersArray[selectedIndex].name)")
+
         let printerXML = """
 <?xml version="1.0" encoding="UTF-8"?>
 <printer>
@@ -181,7 +174,6 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 existingPrinters_AC.rearrangeObjects()
             } else {
                 WriteToLog.shared.message(stringOfText: "Failed (status code: \(statusCode)) to update category of printer \(whichPrinter.name) to \(selectedCategory)")
-//                print("Update for printer \(whichPrinter.name) failed. Status code: \(statusCode)")
             }
             updated += 1
             if updated < selectedPrinters.count {
@@ -190,7 +182,6 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         }
     }
     
-    // Delegate Methods - start
     fileprivate func fetchCategories() {
         existingPrintersArray = existingPrinters_AC.arrangedObjects as! [PrinterInfo]
         
@@ -214,7 +205,6 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 }
             }
             
-            // load local printers
             NotificationCenter.default.post(name: .loadPrintersNotification, object: self)
             spinner_ProgressIndicator.stopAnimation(self)
         }
@@ -236,7 +226,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
             let theRange = IndexSet(0..<tmpArray.count)
             existingPrinters_AC.remove(atArrangedObjectIndexes: theRange)
         }
-//        spinner_ProgressIndicator.startAnimation(self)
+
         var saveCredsState: Int?
         (JamfProServer.displayName, JamfProServer.destination, JamfProServer.username, JamfProServer.password,saveCredsState) = loginInfo
         let jamfUtf8Creds = "\(JamfProServer.username):\(JamfProServer.password)".data(using: String.Encoding.utf8)
@@ -253,18 +243,14 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 defaults.set(JamfProServer.destination, forKey: "currentServer")
                 defaults.set(JamfProServer.username, forKey: "username")
                 
-//                connectedTo_TextField.stringValue = "Conntected to: \(JamfProServer.destination.fqdnFromUrl)"
-                
                 self.view.window?.title = "Jamf Printer Manager: \(JamfProServer.destination.fqdnFromUrl)"
-//                self.view.window?.title = "Jamf Printer Manager : your.jamfPro.server"
                 
-                // save credentials in case they were changed at the login window
                 if saveCredsState == 1 {
                     Credentials.shared.save(service: "\(JamfProServer.destination.fqdnFromUrl)", account: JamfProServer.username, credential: JamfProServer.password)
                 }
                 
                 existingPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-                // Get all printers currently in Jamf Pro
+
                 XmlDelegate.shared.apiAction(method: "GET", theEndpoint: "printers", acceptFormat: "application/json") { [self]
                     (result: (Int,Any)) in
                     let (statusCode, allPrinters) = result
@@ -274,15 +260,12 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                         for thePrinter in printerList {
                             let printerId = thePrinter["id"] as! Int
                             let printerName = thePrinter["name"] as! String
-//                            print("  id: \(printerId)")
-//                            print("name: \(thePrinter["name"] as! String)\n")
-                            //Get details on each printer
+                            
                             var acceptFormat = "application/json"
                             XmlDelegate.shared.apiAction(method: "GET", theEndpoint: "printers/id/\(printerId)", xmlData: printerName, acceptFormat: "text/xml") { [self]
                                 (result: (Int,Any)) in
                                 let (_, printerDetails) = result
                                 fetchedPrinters += 1
-//                                print("printerDetails: \(printerDetails)")
                                 
                                 
                                 if let data = "\(printerDetails)".data(using: .utf8) {
@@ -291,14 +274,8 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                                     xmlParser.delegate = delegate
                                     if xmlParser.parse() {
                                         for entry in delegate.printerArray {
-//                                            print("     name: \(entry.name)")
-//                                            print("cups_name: \(entry.cups_name)")
-//                                            print(" ppd_path: \(entry.ppd_path)")
-//                                            print("       id: \(entry.id)")
-//                                            print(" category: \(entry.category)")
                                             existingPrinters_AC.addObject(PrinterInfo(id: entry.id, name: entry.name.xmlDecode, category: entry.category, uri: entry.uri, cups_name: entry.cups_name, location: entry.location, model: entry.model, make_default: entry.make_default, shared: entry.shared, info: entry.info, notes: entry.notes, use_generic: entry.use_generic, ppd: entry.ppd, ppd_contents: entry.ppd_contents, ppd_path: entry.ppd_path, os_req: entry.os_req))
                                         }
-                                        // sort printer list
                                         existingPrinters_AC.rearrangeObjects()
                                     }
                                     
@@ -310,12 +287,6 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                         }
                         if printerList.count == 0 {
                             fetchCategories()
-//                            existingPrintersArray = existingPrinters_AC.arrangedObjects as! [PrinterInfo]
-//                            // load local printers
-//                            NotificationCenter.default.post(name: .loadPrintersNotification, object: self)
-//                            
-//                            spinner_ProgressIndicator.stopAnimation(self)
-                            
                         }
                     }
                 }
@@ -323,10 +294,8 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 DispatchQueue.main.async { [self] in
                     WriteToLog.shared.message(stringOfText: "Failed to authenticate, status code: \(statusCode)")
                     performSegue(withIdentifier: "loginView", sender: nil)
-//                        working(isWorking: false)
                 }
             }
-//            spinner_ProgressIndicator.stopAnimation(self)
         }
     }
     
@@ -335,12 +304,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         if segue.identifier == "loginView" {
             let loginVC: LoginVC = segue.destinationController as! LoginVC
             loginVC.delegate = self
-        } //else if segue.identifier == "addPrinter" {
-//            let addPrinterVC: AddPrinterVC = segue.destinationController as! AddPrinterVC
-//        } else if segue.identifier == "printerInfo" {
-//            let printerInfoVC: PrinterInfoVC = segue.destinationController as! PrinterInfoVC
-//            
-//        }
+        }
     }
     
     override func viewDidLoad() {
@@ -348,7 +312,6 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         
         NotificationCenter.default.addObserver(self, selector: #selector(addedPrintersNotification(_:)), name: .addedPrintersNotification, object: nil)
         
-        // Create Application Support folder for the app if missing - start
         let app_support_path = NSHomeDirectory() + "/Library/Application Support"
         if !(FileManager.default.fileExists(atPath: app_support_path)) {
             do {
@@ -357,10 +320,9 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 WriteToLog.shared.message(stringOfText: "Problem creating '/Library/Application Support' folder:  \(error)")
             }
         }
-        // Create Application Support folder for the app if missing - end
         
         existingPrinters_TableView.delegate   = self
-//        existingPrinters_TableView.dataSource = self
+
         existingPrinters_TableView.tableColumns.forEach { (column) in
             column.headerCell.attributedStringValue = NSAttributedString(string: column.title, attributes: [NSAttributedString.Key.font: NSFont.boldSystemFont(ofSize: 16)])
         }
@@ -380,7 +342,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
 
     override var representedObject: Any? {
         didSet {
-        // Update the view, if already loaded.
+
         }
     }
     
@@ -388,7 +350,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         existingPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         existingPrinters_AC.rearrangeObjects()
        
-//        existingPrintersArray = existingPrinters_AC.arrangedObjects as! [PrinterInfo]
+
         indexOfSelectedPrinter = existingPrinters_TableView.clickedRow
         
         if indexOfSelectedPrinter ?? -1 < 0 {
@@ -398,14 +360,13 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         existingPrinters_TableView.isEnabled = false
         let selectedPrinter = existingPrintersArray[indexOfSelectedPrinter!]
         let printerId = selectedPrinter.id
-//        print("[\(#line)] selected printer: \(selectedPrinter.name) (id: \(selectedPrinter.id))")
 
         DispatchQueue.main.async {
             
             XmlDelegate.shared.apiAction(method: "GET", theEndpoint: "printers/id/\(printerId)", acceptFormat: "application/json") { [self]
                 (result: (Int,Any)) in
                 let (statusCode, printerRecord) = result
-//                print("printerRecord: \(printerRecord)")
+
                 guard let printerInfoRecord = printerRecord as? [String:AnyObject] else {
                     WriteToLog.shared.message(stringOfText: "[ViewController] Issue reading current printer record.")
                     spinner_ProgressIndicator.stopAnimation(self)
@@ -414,7 +375,6 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                     return
                 }
                 printerInfoDict = printerInfoRecord["printer"] as! [String:AnyObject]
-//                printerToUpdate = existingPrintersDict[printerId]!
                 
                 NotificationCenter.default.addObserver(self, selector: #selector(updatedPrintersNotification(_:)), name: .updatedPrintersNotification, object: nil)
                 
@@ -422,11 +382,10 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 existingPrinters_TableView.isEnabled = true
                 self.performSegue(withIdentifier: "printerInfo", sender: nil)
             }
-        }   // dispatchQueue.main.async - end
+        }
     }
    
     @objc func addedPrintersNotification(_ notification: Notification) {
-       // add printer to list of available
        print("added \(addedPrinterInfo.count) printer(s)")
        existingPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
        existingPrinters_AC.add(contentsOf: addedPrinterInfo)
@@ -435,11 +394,6 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
        existingPrintersArray = existingPrinters_AC.arrangedObjects as! [PrinterInfo]
     }
     @objc func updatedPrintersNotification(_ notification: Notification) {
-        // update printer in list
-        //        print("update printer with index \(indexOfSelectedPrinter!)")
-        //        print("update printer \(editPrinterInfo.name)")
-//        print("[ViewController] update printer \(existingPrintersArray[indexOfSelectedPrinter!].name)")
-//        print("[ViewController] update printer \(existingPrintersArray[indexOfSelectedPrinter!].category)")
         
         let tmpArray = existingPrinters_AC.arrangedObjects as! [PrinterInfo]
         let theRange = IndexSet(0..<tmpArray.count)
@@ -454,23 +408,19 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
 extension ViewController : NSTableViewDataSource, NSTableViewDelegate {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-//      print("numberOfRows: \(policiesArray.count)")
         return existingPrintersArray.count
     }
     
     func tableViewSelectionDidChange(_ notification: Notification) {
         if existingPrinters_TableView.selectedRowIndexes.count > 0 {
             categorySubMenu_MenuItem.isHidden = false
-//            print("enable category context menu")
         } else {
             categorySubMenu_MenuItem.isHidden = true
-//            print("disable category context menu")
         }
     }
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
     {
-        //        print("tableView: \(tableView)\t\ttableColumn: \(tableColumn)\t\trow: \(row)")
         var newString:String = ""
         if (tableView == existingPrinters_TableView)
         {
@@ -480,13 +430,6 @@ extension ViewController : NSTableViewDataSource, NSTableViewDelegate {
         return newString;
     }
     
-    /*
-    func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
-        if (tableView == existingPrinters_TableView) {
-            sortPoliciesTableView(theRow: -1)
-        }
-    }
-     */
 }
 
 extension Notification.Name {

@@ -11,29 +11,13 @@ class TokenDelegate: NSObject, URLSessionDelegate {
     
     let userDefaults = UserDefaults.standard
     var components   = DateComponents()
-    var renewQ       = DispatchQueue(label: "com.token_refreshQ", qos: DispatchQoS.background)   // running background process for refreshing token
+    var renewQ       = DispatchQueue(label: "com.token_refreshQ", qos: DispatchQoS.background)
     
     func getToken(serverUrl: String, base64creds: String, completion: @escaping (_ authResult: (Int,String)) -> Void) {
 
 
-//        WriteToLog.shared.message(stringOfText: "[getToken] token for server: \(serverUrl)")
-//        print("[getToken] JamfProServer.username: \(String(describing: JamfProServer.username))")
-//        print("[getToken] JamfProServer.password: \(String(describing: JamfProServer.password?.prefix(1)))")
-//        print("[getToken] JamfProServer.server: \(String(describing: JamfProServer.source))")
-//        print("[getToken] JamfProServer.server: \(String(describing: JamfProServer.url))")
-       
-//        JamfProServer.url = serverUrl
-
         URLCache.shared.removeAllCachedResponses()
 
-//        var tokenUrlString = "\(serverUrl)/api/v1/auth/token"
-
-//        var apiClient = ( userDefaults.integer(forKey: "UseApiClient") == 1 ) ? true:false
-//
-//        if apiClient {
-//            tokenUrlString = "\(serverUrl)/api/oauth/token"
-//        }
-        
         var tokenUrlString = "\(serverUrl)/api/v1/auth/token"
 
         var apiClient = false
@@ -43,7 +27,6 @@ class TokenDelegate: NSObject, URLSessionDelegate {
         }
 
         tokenUrlString     = tokenUrlString.replacingOccurrences(of: "//api", with: "/api")
-        //        print("[getToken] tokenUrlString: \(tokenUrlString)")
 
         let tokenUrl       = URL(string: "\(tokenUrlString)")
         guard let _ = URL(string: "\(tokenUrlString)") else {
@@ -52,18 +35,12 @@ class TokenDelegate: NSObject, URLSessionDelegate {
             completion((500, "failed"))
             return
         }
-        //        print("[getToken] tokenUrl: \(tokenUrl!)")
+
         let configuration  = URLSessionConfiguration.ephemeral
         var request        = URLRequest(url: tokenUrl!)
         request.httpMethod = "POST"
 
         let (_, _, _, tokenAgeInSeconds) = timeDiff(startTime: JamfProServer.tokenCreated)
-
-//        print("[getToken]  JamfProServer.validToken: \(String(describing: JamfProServer.validToken))")
-//        print("[getToken]         tokenAgeInSeconds: \(tokenAgeInSeconds)")
-//        print("[getToken]         renew token after: \(JamfProServer.authExpires) seconds")
-//        print("[getToken] JamfProServer.base64Creds: \(String(describing: JamfProServer.base64Creds))")
-//        print("[getToken]               base64creds: \(String(describing: base64creds))")
 
         if !( JamfProServer.validToken && tokenAgeInSeconds < JamfProServer.authExpires ) || (JamfProServer.base64Creds != base64creds) {
             WriteToLog.shared.message(stringOfText: "[getToken] tokenAgeInSeconds: \(tokenAgeInSeconds)")
@@ -73,7 +50,6 @@ class TokenDelegate: NSObject, URLSessionDelegate {
                 let clientId = JamfProServer.username
                 let secret   = JamfProServer.password
                 let clientString = "grant_type=client_credentials&client_id=\(String(describing: clientId))&client_secret=\(String(describing: secret))"
-        //                print("[getToken] clientString: \(clientString)")
 
                 let requestData = clientString.data(using: .utf8)
                 request.httpBody = requestData
@@ -83,10 +59,6 @@ class TokenDelegate: NSObject, URLSessionDelegate {
                 configuration.httpAdditionalHeaders = ["Authorization" : "Basic \(base64creds)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
                 JamfProServer.currentCred = base64creds
             }
-//            print("[getToken] tokenUrlString: \(tokenUrlString)")
-//            print("[getToken] configuration.httpAdditionalHeaders: \(String(describing: configuration.httpAdditionalHeaders))")
-            
-//            print("[getToken]    base64creds: \(base64creds)")
             
             let session = Foundation.URLSession(configuration: configuration, delegate: self as URLSessionDelegate, delegateQueue: OperationQueue.main)
             let task = session.dataTask(with: request as URLRequest, completionHandler: { [self]
@@ -109,11 +81,9 @@ class TokenDelegate: NSObject, URLSessionDelegate {
                                 JamfProServer.validToken   = true
                                 JamfProServer.authType     = "Bearer"
                                 
-                                //                      print("[JamfPro] result of token request: \(endpointJSON)")
                                 WriteToLog.shared.message(stringOfText: "[getToken] new token created for \(serverUrl)")
                                 
                                 if JamfProServer.version == "" {
-                                    // get Jamf Pro version - start
                                     getVersion(serverUrl: serverUrl, endpoint: "jamf-pro-version", apiData: [:], id: "", token: JamfProServer.accessToken, method: "GET") {
                                         (result: [String:Any]) in
                                         let versionString = result["version"] as! String
@@ -153,26 +123,24 @@ class TokenDelegate: NSObject, URLSessionDelegate {
                                             }
                                         }
                                     }
-                                    // get Jamf Pro version - end
                                 } else {
                                     completion((200, "success"))
                                     return
                                 }
-                            } else {    // if let endpointJSON error
+                            } else {
                                 WriteToLog.shared.message(stringOfText: "[getToken] JSON error.\n\(String(describing: json))")
                                 JamfProServer.validToken = false
                                 completion((httpResponse.statusCode, "failed"))
                                 return
                             }
                         } else {
-                            // server down?
                             _ = Alert.shared.display(header: "", message: "Failed to get an expected response from \(String(describing: serverUrl)).", secondButton: "")
                             WriteToLog.shared.message(stringOfText: "[TokenDelegate.getToken] Failed to get an expected response from \(String(describing: serverUrl)).  Status Code: \(httpResponse.statusCode)")
                             JamfProServer.validToken = false
                             completion((httpResponse.statusCode, "failed"))
                             return
                         }
-                    } else {    // if httpResponse.statusCode <200 or >299
+                    } else {
                         _ = Alert.shared.display(header: "\(serverUrl)", message: "Failed to authenticate to \(serverUrl). \nStatus Code: \(httpResponse.statusCode)", secondButton: "")
                         WriteToLog.shared.message(stringOfText: "[getToken] Failed to authenticate to \(serverUrl).  Response error: \(httpResponse.statusCode)")
                         JamfProServer.validToken = false
@@ -189,7 +157,6 @@ class TokenDelegate: NSObject, URLSessionDelegate {
             })
             task.resume()
         } else {
-//            WriteToLog.shared.message(stringOfText: "[getToken] Use existing token from \(String(describing: tokenUrl))")
             completion((200, "success"))
             return
         }
@@ -198,7 +165,6 @@ class TokenDelegate: NSObject, URLSessionDelegate {
     func getVersion(serverUrl: String, endpoint: String, apiData: [String:Any], id: String, token: String, method: String, completion: @escaping (_ returnedJSON: [String: Any]) -> Void) {
         
         if method.lowercased() == "skip" {
-//            if LogLevel.debug { WriteToLog.shared.message(stringOfText: "[Jpapi.action] skipping \(endpoint) endpoint with id \(id).") }
             let JPAPI_result = (endpoint == "auth/invalidate-token") ? "no valid token":"failed"
             completion(["JPAPI_result":JPAPI_result, "JPAPI_response":000])
             return
@@ -219,7 +185,6 @@ class TokenDelegate: NSObject, URLSessionDelegate {
         if id != "" && id != "0" {
             urlString = urlString + "/\(id)"
         }
-//        print("[Jpapi] urlString: \(urlString)")
         
         let url            = URL(string: "\(urlString)")
         let configuration  = URLSessionConfiguration.default
@@ -242,7 +207,6 @@ class TokenDelegate: NSObject, URLSessionDelegate {
         }
         
         WriteToLog.shared.message(stringOfText: "[Jpapi.action] Attempting \(method) on \(urlString).")
-//        print("[Jpapi.action] Attempting \(method) on \(urlString).")
         
         configuration.httpAdditionalHeaders = ["Authorization" : "Bearer \(token)", "Content-Type" : "application/json", "Accept" : "application/json", "User-Agent" : AppInfo.userAgentHeader]
         
@@ -257,7 +221,7 @@ class TokenDelegate: NSObject, URLSessionDelegate {
                     if let endpointJSON = json as? [String:Any] {
                         completion(endpointJSON)
                         return
-                    } else {    // if let endpointJSON error
+                    } else {
                         if httpResponse.statusCode == 204 && endpoint == "auth/invalidate-token" {
                             completion(["JPAPI_result":"token terminated", "JPAPI_response":httpResponse.statusCode])
                         } else {
@@ -265,7 +229,7 @@ class TokenDelegate: NSObject, URLSessionDelegate {
                         }
                         return
                     }
-                } else {    // if httpResponse.statusCode <200 or >299
+                } else {
                     WriteToLog.shared.message(stringOfText: "[TokenDelegate.getVersion] Response error: \(httpResponse.statusCode).")
                     completion(["JPAPI_result":"failed", "JPAPI_method":request.httpMethod ?? method, "JPAPI_response":httpResponse.statusCode, "JPAPI_server":urlString, "JPAPI_token":token])
                     return
@@ -278,5 +242,5 @@ class TokenDelegate: NSObject, URLSessionDelegate {
         })
         task.resume()
         
-    }   // func getVersion - end
+    }  
 }

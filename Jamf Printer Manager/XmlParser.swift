@@ -15,7 +15,6 @@ class XmlParser: NSObject, XMLParserDelegate {
     var newPrinter: Printer? = nil
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-//        print("elementName: \(elementName)")
         switch elementName {
         case "printer", "dict" :
             self.newPrinter = Printer()

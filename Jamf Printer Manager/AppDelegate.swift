@@ -55,9 +55,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func showLogFolder(_ sender: Any) {
-//        isDir = true
         if (FileManager.default.fileExists(atPath: Log.path!)) {
-//        if (FileManager.default.fileExists(atPath: Log.path!, isDirectory: &isDir)) {
             NSWorkspace.shared.open(URL(fileURLWithPath: Log.path!))
         } else {
             _ = Alert.shared.display(header: "Alert", message: "There are currently no log files to display.", secondButton: "")
@@ -65,18 +63,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Insert code here to initialize your application
+
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
+
     }
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
     }
     
-    // quit the app if the window is closed
     func applicationShouldTerminateAfterLastWindowClosed(_ app: NSApplication) -> Bool {
         return true
     }

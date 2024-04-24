@@ -6,14 +6,8 @@
 import Cocoa
 import Foundation
 
-//protocol SendPrinterInfoDelegate {
-//    func sendPrinterInfo(printerInfo: [PrinterInfo])
-//}
-
 class AddPrinterVC: NSViewController {
-    
-//    var delegate: SendPrinterInfoDelegate? = nil
-    
+        
     @IBOutlet weak var refresh_Button: NSButton!
     
     @IBAction func refresh_Action(_ sender: Any) {
@@ -22,7 +16,6 @@ class AddPrinterVC: NSViewController {
         localPrinters_AC.remove(atArrangedObjectIndexes: theRange)
         
         let cupsXML = cupsInfo(cupsFileName: printerPlist.path)
-//        print("[refresh_Action] printerPlist.path: \(printerPlist.path)")
         
         processPlist(thePlist: cupsXML, groupingTag: "dict")
         localPrintersArray.removeAll()
@@ -36,7 +29,6 @@ class AddPrinterVC: NSViewController {
         defaults.set(category_Button.titleOfSelectedItem, forKey: "selectedCategory")
     }
     
-//    var existingPrinters     = [PrinterInfo]()
     var selectedPrinterArray = [PrinterInfo]()
     
     var local_id           = ""
@@ -64,7 +56,6 @@ class AddPrinterVC: NSViewController {
         if selectedPrinters.count < 1 {
             _ = Alert.shared.display(header: "Attention:", message: "At least one printer must be selected.", secondButton: "")
         } else {
-            // add printer
             add_Button.isEnabled = false
             var addedPrinters = 0
             let selectedCategory = (( category_Button.titleOfSelectedItem == "None" ) ? "":category_Button.titleOfSelectedItem) ?? ""
@@ -83,7 +74,7 @@ class AddPrinterVC: NSViewController {
     private func addPrinter(arrayIndex: Int, selectedPrinters: [Int], selectedCategory: String, addedPrinters: Int) {
         var added         = addedPrinters
         var selectedIndex = selectedPrinters[arrayIndex]
-//                print("selected: \(localPrintersArray[selectedIndex].name)")
+
         let printerXML = """
 <?xml version="1.0" encoding="UTF-8"?>
 <printer>
@@ -106,21 +97,21 @@ class AddPrinterVC: NSViewController {
 """
         XmlDelegate.shared.apiAction(method: "POST", theEndpoint: "printers/id/0", xmlData: printerXML) { [self]
             (result: (Int,Any)) in
-//            print("api result: \(result)")
+
             let (statusCode, httpReply) = result
                         
             if statusCode > 299 {
                 WriteToLog.shared.message(stringOfText: "Error creating \(localPrintersArray[selectedIndex].name).  Status code: \(statusCode)")
                 WriteToLog.shared.message(stringOfText: "HTTP reply: \(httpReply)")
                 _ = Alert.shared.display(header: "", message: "Error creating \(localPrintersArray[selectedIndex].name).  Status code: \(statusCode)", secondButton: "")
-//                print("XML of failed printer \n\(printerXML)\n")
+
             } else {
                 selectedPrinterArray.append(localPrintersArray[selectedIndex])
                 let newID = betweenTags(xmlString: httpReply as! String, startTag: "<id>", endTag: "</id>", includeTags: false)
                 selectedPrinterArray.last?.id = "\(newID)"
                 selectedPrinterArray.last?.category = "\(String(describing: selectedCategory))"
                 WriteToLog.shared.message(stringOfText: "\(localPrintersArray[selectedIndex].name) has been added to Jamf Pro.")
-                // remove from local printer list
+
                 localPrinters_AC.remove(atArrangedObjectIndex: selectedIndex-addedPrinters)
                 localPrinters_AC.rearrangeObjects()
                 added += 1
@@ -128,7 +119,7 @@ class AddPrinterVC: NSViewController {
             if arrayIndex == selectedPrinters.count-1 {
                 add_Button.isEnabled = true
                 localPrintersArray = localPrinters_AC.arrangedObjects as! [PrinterInfo]
-                // post notification
+
                 addedPrinterInfo = selectedPrinterArray
                 NotificationCenter.default.post(name: .addedPrintersNotification, object: nil)
             } else {
@@ -138,7 +129,7 @@ class AddPrinterVC: NSViewController {
     }
     
     private func processPlist(thePlist: String, groupingTag: String) {
-//        print("cups file: \(thePlist)\n")
+
         var localPrintersDict = [String:[String:String]]()
         
         let xmlData = try? Data(contentsOf: URL(filePath: printerPlist.path))
@@ -148,89 +139,12 @@ class AddPrinterVC: NSViewController {
         xmlParser.delegate = delegate
         if xmlParser.parse() {
             for thePrinter in delegate.printerArray {
-//                print("     name: \(thePrinter.name)")
-//                print("cups_name: \(thePrinter.cups_name)")
-//                print("    model: \(thePrinter.model)")
-//                print(" location: \(thePrinter.location)")
-//                print("      uri: \(thePrinter.uri)\n")
                 if thePrinter.name != "" {
                     localPrintersDict[thePrinter.name] = ["cups_name" : thePrinter.cups_name, "location" : thePrinter.location, "model" : thePrinter.model, "uri" : thePrinter.uri]
                 }
             }
         }
         
-        /*
-        let plistArray = thePlist.components(separatedBy: "\n")
-        var startEntry = false
-        var trimmedLine: String?
-        var i = 0
-        while i < plistArray.count-1 {
-            trimmedLine = plistArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-            if trimmedLine == "<\(groupingTag)>" {
-                startEntry = true
-                i += 1
-                while startEntry {
-                    trimmedLine = plistArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-                    if trimmedLine == "</\(groupingTag)>" {
-                        startEntry = false
-                        if local_name != "" {
-                            localPrintersDict[local_name] = ["cups_name" : local_cups_name, "location" : local_location, "model" : local_model, "uri" : local_uri]
-                        }
-                        local_name      = ""
-                        local_cups_name = ""
-                        local_location  = ""
-                        local_model     = ""
-                        local_uri       = ""
-
-                        i += 1
-                        trimmedLine = plistArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-//                        print("")
-                    } else {
-                        let key = trimmedLine!.dropFirst(5).dropLast(6)
-                        i += 1
-                        let value = plistArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-                        switch value {
-                        case "<array>":
-                            i += 1
-                            var endTag = plistArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-                            while endTag != "</array>" {
-                                i += 1
-                                endTag = plistArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-                            }
-                        case "<true/>", "<false/>":
-//                            print("\(key): \(value.dropFirst(1).dropLast(2))")
-                            break
-                        default:
-                            let trimmedValue = betweenTags(xmlString: value, startTag: ">", endTag: "</", includeTags: false)
-//                            print("\(key): \(trimmedValue)")
-                            switch key {
-                            case "printer-info":
-                                local_name = trimmedValue
-                            case "printer-name":
-                                local_cups_name = trimmedValue
-                            case "printer-location":
-                                local_location = trimmedValue
-                            case "printer-make-and-model":
-                                local_model = trimmedValue
-                            case "device-uri":
-                                local_uri = trimmedValue
-                            default:
-                                break
-                            }
-                        }
-                        i += 1
-                    }
-                    
-                }
-            } else {
-                i += 1
-                trimmedLine = plistArray[i].trimmingCharacters(in: .whitespacesAndNewlines)
-            }
-        }
-        */
-//        print("\(localPrintersDict)")
-        
-        // add to list of printers to add
         localPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         let ppdDict = ppdInfo(cupsName: "")
         var addToList = true
@@ -241,26 +155,9 @@ class AddPrinterVC: NSViewController {
                 addToList = false
             }
 
-            
-//            print("value: \(value)")
-            /*
-            for existingPrinter in existingPrintersArray {
-                print("comparePrinter uri: \(existingPrinter.uri.xmlDecode), value[\"uri\"]: \(String(describing: value["uri"]?.xmlDecode))")
-                print("comparePrinter cups_name: \(existingPrinter.cups_name), value[\"cups_name\"]: \(String(describing: value["cups_name"]!))")
-//                print("value[\"cups_name\"]: \(String(describing: value["cups_name"]!))")
-                if existingPrinter.uri.xmlDecode == value["uri"]?.xmlDecode ?? "" && existingPrinter.cups_name == value["cups_name"]! {
-                    WriteToLog.shared.message(stringOfText: "\(existingPrinter.name) is already available in Jamf Pro.")
-                    addToList = false
-                    break
-                }
-            }
-            */
-//            let ppdDict = ppdInfo(cupsName: value["cups_name"] ?? "")
             if addToList && value["cups_name"] != nil {
-//                print("ppdDict: \(ppdDict[value["cups_name"]!])")
                 let local_ppd_info = ppdDict[value["cups_name"]!] ?? [:]
-//                print("local_ppd_info: \(local_ppd_info)")
-//                print("local_ppd_info contents: \(String(describing: local_ppd_info["ppd_contents"]))")
+
                 if local_ppd_info["ppd_contents"] != nil {
                     localPrinters_AC.addObject(PrinterInfo(id: "", name: key.xmlDecode, category: "", uri: value["uri"] ?? "", cups_name: value["cups_name"] ?? "", location: value["location"]?.xmlDecode ?? "", model: value["model"] ?? "", make_default: "false", shared: value["shared"] ?? "false", info: value["info"]?.xmlDecode ?? "", notes: value["notes"]?.xmlDecode ?? "", use_generic: "false", ppd: local_ppd_info["ppd_file_name"] ?? "", ppd_contents: local_ppd_info["ppd_contents"] ?? "", ppd_path: local_ppd_info["ppd_file_path"] ?? "", os_req: value["os_requirements"] ?? ""))
                 } else {
@@ -280,7 +177,6 @@ class AddPrinterVC: NSViewController {
         var ppd_file_name = ""
         var ppd_contents  = ""
         var ppdDict       = [String:[String:String]]()
-//        var ppdDict       = [String:String]()
         
         let process = Process()
 
@@ -294,7 +190,7 @@ class AddPrinterVC: NSViewController {
 
         do {
             try process.run()
-            // Read the output of the command from the pipe
+
             let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
             let outputArray = String(decoding: outputData, as: UTF8.self).components(separatedBy: "\n")
             
@@ -309,12 +205,10 @@ class AddPrinterVC: NSViewController {
             
             var eof = false
             while i < outputArray.count-1 && !eof {
-                // look for cups name
                 while outputArray[i].suffix(4) != ".ppd" {
                     if i < outputArray.count-1 {
                         i += 1
                     } else {
-//                        print("[printer] reached end of file")
                         eof = true
                         break
                     }
@@ -326,8 +220,7 @@ class AddPrinterVC: NSViewController {
                         if ppd_file_path != "" {
                             let ppd_url = URL(fileURLWithPath: ppd_file_path)
                             ppd_file_name = ppd_url.lastPathComponent
-//                                print("    ppd_file_path: \(ppd_file_path)")
-//                                print("    ppd_file_name: \(ppd_file_name)")
+                            
                             let cups_name = String(ppd_file_name.dropLast(4))
                             ppd_contents = try String(contentsOf: ppd_url, encoding: .utf8).xmlEncode
                             if cups_name != "" {
@@ -338,7 +231,7 @@ class AddPrinterVC: NSViewController {
                     i += 1
                 }
             }
-//            print("ppdDict count: \(ppdDict.count)")
+
         } catch {
             WriteToLog.shared.message(stringOfText: "Error getting ppd info for \(cupsName): \(error.localizedDescription)")
         }
@@ -360,7 +253,7 @@ class AddPrinterVC: NSViewController {
 
         do {
             try process.run()
-            // Read the output of the command from the pipe
+
             let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
             cupsPrinters = String(decoding: outputData, as: UTF8.self)
         } catch {
@@ -410,31 +303,15 @@ class AddPrinterVC: NSViewController {
         category_Button.selectItem(withTitle: lastCategory)
                 
         if FileManager.default.fileExists(atPath: "/Library/Preferences/org.cups.printers.plist") {
+                
+            let cupsXML = cupsInfo(cupsFileName: printerPlist.path)
             
-//            let bookmarkedFile = fetchBookmark()
-//            print("file exists: \(FileManager.default.fileExists(atPath: AppInfo.bookmarksPath))")
-//            print("fetchBookmark: \(bookmarkedFile)")
-//
-//            print("is readable: \(FileManager.default.isReadableFile(atPath: "/Library/Preferences/org.cups.printers.plist"))")
-            
-//            if bookmarkError || bookmarkedFile != "file:///Library/Preferences/org.cups.printers.plist" {
-//            if false {
-//                _ = Alert.shared.display(header: "Attention:", message: "Access to org.cups.printers.plist must be granted in order to list local printers.\n  Click open on the next dialog to continue.", secondButton: "")
-                
-//                selectCupsFile()
-//                loadPrinters()
-//            } else {
-//                storeBookmark(theURL: printerPlist)
-                
-                let cupsXML = cupsInfo(cupsFileName: printerPlist.path)
-                
-                if loginAction == "changeServer" {
-                    refresh_Action(self)
-                    loginAction = ""
-                } else {
-                    processPlist(thePlist: cupsXML, groupingTag: "dict")
-                }
-//            }
+            if loginAction == "changeServer" {
+                refresh_Action(self)
+                loginAction = ""
+            } else {
+                processPlist(thePlist: cupsXML, groupingTag: "dict")
+            }
         } else {
             _ = Alert.shared.display(header: "Attention:", message: "No local printers found that can be added to Jamf Pro.", secondButton: "")
         }
@@ -445,7 +322,6 @@ class AddPrinterVC: NSViewController {
 extension AddPrinterVC : NSTableViewDataSource, NSTableViewDelegate {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-//      print("numberOfRows: \(policiesArray.count)")
         return localPrintersArray.count
     }
     
@@ -466,15 +342,6 @@ extension AddPrinterVC : NSTableViewDataSource, NSTableViewDelegate {
         }
         return newString;
     }
-    
-    /*
-    func tableView(_ tableView: NSTableView, sortDescriptorsDidChange oldDescriptors: [NSSortDescriptor]) {
-        if (tableView == localPrinters_TableView) {
-            sortPoliciesTableView(theRow: -1)
-        }
-    }
-     */
-
 }
 
 extension Notification.Name {

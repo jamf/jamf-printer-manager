@@ -14,16 +14,12 @@ class CupsParser: NSObject, XMLParserDelegate {
     enum Tag { case none, dict, key, string, integer, array, bool }
     var tag: Tag = .none
     
-//    enum State { case none, name, queue, uri, cups_name, location }
-//    var state: State = .none
     var newPrinter: Printer? = nil
     
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String]) {
-//        print("elementName: \(elementName)")
         switch elementName {
         case "dict":
             self.newPrinter = Printer()
-//            self.state = .none
             self.tag   = .none
         case "key":
             self.tag = .key
@@ -48,7 +44,6 @@ class CupsParser: NSObject, XMLParserDelegate {
         if let newPrinter = self.newPrinter, elementName == "dict" {
             self.printerArray.append(newPrinter)
             self.newPrinter = nil
-//            keyFound = false
         } else if let newPrinter = self.newPrinter, elementName == "key" {
             keyFound = true
         } else if let newPrinter = self.newPrinter {
@@ -56,23 +51,18 @@ class CupsParser: NSObject, XMLParserDelegate {
             readValue = false
         }
         
-//        self.state = .none
     }
     
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         guard let _ = self.newPrinter else { return }
-//        print("            keyName: \(keyName)")
-//        print("    foundCharacters: \(string)")
         if !keyFound {
             keyName = string
         } else {
-//            if string != "\n\t\t" {
             if readValue {
                 switch keyName {
-                case "printer-name":    // cups_name
+                case "printer-name":
                     self.newPrinter!.cups_name += string
-                case "printer-info":    // printer name
-//                    print("string: '\(string)'")
+                case "printer-info":   
                     self.newPrinter!.name += string
                 case "printer-location":
                     self.newPrinter!.location = string

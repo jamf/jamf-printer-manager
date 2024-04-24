@@ -4,26 +4,22 @@
 
 import Foundation
 
-// func cleanup - start
 func cleanup() {
-    let maxLogFileCount = 42 //(defaults.integer(forKey: "logFilesCountPref") < 1) ? 20:defaults.integer(forKey: "logFilesCountPref")
+    let maxLogFileCount = 42
     var logArray: [String] = []
     var logCount: Int = 0
     do {
         let logFiles = try FileManager.default.contentsOfDirectory(atPath: Log.path!)
         
         for logFile in logFiles {
-            let filePath: String = Log.path! + logFile //Log.file
-//            print("filePath: \(filePath)")
+            let filePath: String = Log.path! + logFile
             logArray.append(filePath)
         }
         logArray.sort()
         logCount = logArray.count
         if didRun {
-            // remove old history files
             if logCount > maxLogFileCount {
                 for i in (0..<logCount-maxLogFileCount) {
-//                    if LogLevel.debug { WriteToLog.shared.message(stringOfText: "Deleting log file: " + logArray[i] + "\n") }
                     
                     do {
                         try FileManager.default.removeItem(atPath: logArray[i])
@@ -34,7 +30,6 @@ func cleanup() {
                 }
             }
         } else {
-            // delete empty log file
             if logCount > 0 {
                 
             }

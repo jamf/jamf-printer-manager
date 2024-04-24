@@ -20,7 +20,7 @@ class ToUVC: NSViewController {
     func setTheme(darkMode: Bool) {
         self.view.layer?.backgroundColor = darkMode ? CGColor.init(gray: 0.2, alpha: 1.0):CGColor.init(gray: 0.2, alpha: 0.2)
         defaultTextColor = isDarkMode ? NSColor.white:NSColor.black
-//        displayText()
+
         termsOfUse.attributedStringValue = formattedText()
     }
     
@@ -38,9 +38,6 @@ class ToUVC: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do view setup here.
-        
-//        defaults.set(0, forKey: "agreedToTermsOfUse")
         
         DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
         

@@ -13,19 +13,17 @@ var didRun                  = false
 let defaults                = UserDefaults.standard
 var existingPrintersArray   = [PrinterInfo]()
 var pendingPrinterInfo: PrinterInfo?
-//var existingPrintersDict    = [String:[String:String]]()
 var printerToUpdate         = [String:String]()
 let httpSuccess             = 200...299
 var loginAction             = ""
 var printerInfoDict         = [String:AnyObject]()
 let printerPlist            = URL(fileURLWithPath: "/Library/Preferences/org.cups.printers.plist")
-let refreshInterval: UInt32 = 25*60 // 25 minutes
+let refreshInterval: UInt32 = 20*60
 var runComplete             = false
 var showLoginWindow         = true
 var tokenTimeCreated: Date?
 var defaultTextColor        = isDarkMode ? NSColor.white:NSColor.black
 
-// for saving servers, shared settings - LoginVC
 var saveServers            = true
 var maxServerList          = 40
 var appsGroupId            = "group.PS2F6S478M.jamfie.SharedJPMA"
@@ -34,7 +32,6 @@ let sharedContainerUrl     = FileManager.default.containerURL(forSecurityApplica
 let sharedSettingsPlistUrl = (sharedContainerUrl?.appendingPathComponent("Library/Preferences/\(appsGroupId).plist"))!
 var useApiClient           = 0
 
-// determine if we're using dark mode
 var isDarkMode: Bool {
     let mode = defaults.string(forKey: "AppleInterfaceStyle")
     return mode == "Dark"
@@ -78,7 +75,7 @@ struct EditPrinter {
 }
 
 struct JamfProServer {
-    static var csa           = true // cloud services connection
+    static var csa           = true
     static var displayName   = ""
     static var majorVersion  = 0
     static var minorVersion  = 0
@@ -89,16 +86,14 @@ struct JamfProServer {
     static var destination   = ""
     static var username      = ""
     static var password      = ""
-//    static var userpass      = ""
     static var accessToken   = ""
     static var authCreds     = ""
     static var authExpires   = 30.0
-    static var base64Creds   = ""        // used if we want to auth with a different account
+    static var base64Creds   = ""
     static var currentCred   = ""
     static var pkgsNotFound  = 0
     static var validToken    = false
     static var tokenCreated  = Date()
-//    static var tokenExpires  = ""
     static var saveCreds     = 0
     static var sessionCookie = [HTTPCookie]()
     static var stickySession = true
@@ -107,7 +102,6 @@ struct JamfProServer {
 }
 
 struct Log {
-//    static var path: String? = (NSHomeDirectory() + "/Library/Logs/JamfPrinterManager/")
     static var path: String? = (NSHomeDirectory() + "/Library/Logs/")
     static var file:  String = ""
     static var file_FH: FileHandle? = FileHandle(forUpdatingAtPath: "")
@@ -115,7 +109,7 @@ struct Log {
 }
 
 struct Token {
-    static var refreshInterval:UInt32 = 20*60  // 20 minutes
+    static var refreshInterval:UInt32 = 20*60  
     static var sourceServer  = ""
     static var sourceExpires = ""
 }
@@ -143,20 +137,17 @@ public func fetchBookmark() -> String {
        } catch {
            print("Error resolving bookmark:", error)
            bookmarkError = true
-//            return localRecipeUrl
        }
    } else {
        
    }
-//   print("bookmarkedURL!: \(bookmarkedString)")
    return bookmarkedString
 }
 
 public func storeBookmark(theURL: URL) {
    do {
        print("[\(#line)-storeBookmark] store \(theURL) in \(AppInfo.bookmarksPath)")
-       // use for saving folder as bookmark
-//       let bookmarkArchive     = try theURL.bookmarkData(options: .withSecurityScope, includingResourceValuesForKeys: nil, relativeTo: nil)
+       
        if FileManager.default.fileExists(atPath: AppInfo.bookmarksPath) {
            do {
                try FileManager.default.removeItem(atPath: AppInfo.bookmarksPath)
@@ -183,7 +174,6 @@ func timeDiff(startTime: Date) -> (Int, Int, Int, Double) {
     return (Int(components.hour!), Int(components.minute!), Int(components.second!), diffInSeconds)
 }
 
-// get current time
 func getCurrentTime(theFormat: String = "") -> String {
     var stringDate = ""
     let current = Date()
@@ -204,7 +194,6 @@ func getCurrentTime(theFormat: String = "") -> String {
     return stringDate
 }
 
-// add leading zero to single digit integers
 func dd(value: Int) -> String {
     let formattedValue = (value < 10) ? "0\(value)":"\(value)"
     return formattedValue
@@ -212,30 +201,16 @@ func dd(value: Int) -> String {
 
 
 func formattedText() -> NSAttributedString {
-//    let basicFont = NSFont.systemFont(ofSize: 12)
-//    let basicAttributes = [NSAttributedString.Key.font: basicFont, .foregroundColor: defaultTextColor]
-//    let aboutString = NSMutableAttributedString(string: supportText, attributes: basicAttributes)
-//    
-//    let warningString = NSMutableAttributedString(string: agreementText, attributes: basicAttributes as [NSAttributedString.Key : Any])
-//    aboutString.append(warningString)
-//    
-//    let agreementString = NSAttributedString(string: agreementText, attributes: basicAttributes)
-//    aboutString.append(agreementString)
-//
-//    return aboutString
-    let licenseText      = """
-    Jamf Printer Manager helps upload printer configurations to Jamf Pro. This software is licensed under the terms of Jamf's Software License and Services Agreement.
 
-    Copyright 2024, Jamf Software, LLC.
+    let licenseText      = """
+    Jamf Printer Manager helps upload printer configurations to Jamf Pro.
+
+    Copyright 2024, Jamf
     """
     
     let theFont           = NSFont.systemFont(ofSize: 12)
     let licenseAttributes = [NSAttributedString.Key.font: theFont, .foregroundColor: defaultTextColor]
     let licenseString     = NSMutableAttributedString(string: licenseText, attributes: licenseAttributes as [NSAttributedString.Key : Any])
-    let foundRange        = licenseString.mutableString.range(of: "Jamf's Software License and Services Agreement")
-    if foundRange.location != NSNotFound {
-        licenseString.addAttribute(NSAttributedString.Key.link, value: "https://resources.jamf.com/documents/jamf-SLASA.pdf", range: foundRange)
-    }
     return licenseString
 }
 
@@ -282,8 +257,6 @@ extension String {
                 .replacingOccurrences(of: "'", with: "&#39;")
                 .replacingOccurrences(of: "<", with: "&lt;")
                 .replacingOccurrences(of: ">", with: "&gt;")
-//            let data = newString.data(using: .nonLossyASCII, allowLossyConversion: true)!
-//            return String(data: data, encoding: .utf8)!
             return newString
         }
     }
@@ -296,7 +269,6 @@ extension String {
         }
     }
     var urlToFqdn: String {
-        // includes port
         get {
             var fqdn = self
             if fqdn != "" {
@@ -310,7 +282,6 @@ extension String {
     }
 }
 
-// extract the value between (different) tags - start
 func betweenTags(xmlString:String, startTag:String, endTag:String, includeTags: Bool) -> String {
     var rawValue = ""
     if let start = xmlString.range(of: startTag),
@@ -323,4 +294,3 @@ func betweenTags(xmlString:String, startTag:String, endTag:String, includeTags: 
         return rawValue
     }
 }
-//  extract the value between (different) tags - end

@@ -20,8 +20,6 @@ class AboutVC: NSViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
         
         DistributedNotificationCenter.default.addObserver(self, selector: #selector(interfaceModeChanged(sender:)), name: NSNotification.Name(rawValue: "AppleInterfaceThemeChangedNotification"), object: nil)
         
@@ -30,14 +28,6 @@ class AboutVC: NSViewController {
         
         about_image.image = NSImage(named: "AppIcon")
                 
-//        let iconUrl = Bundle.main.url(forResource: "AppIcon", withExtension: "icns")
-//        if let rawImageData = try? Data(contentsOf: iconUrl!) {
-//            if let imageData = NSImage(data: rawImageData) {
-//                DispatchQueue.main.async { [self] in
-//                    about_image.image = grayscale(image: imageData.newCGImage()!, theSize: imageData.size)
-//                }
-//            }
-//        }
         appName_textfield.stringValue = AppInfo.name
         version_textfield.stringValue = "Version \(AppInfo.version) (\(AppInfo.build))"
         license_textfield.textStorage?.setAttributedString(formattedText())
@@ -50,9 +40,7 @@ class AboutVC: NSViewController {
     
     func grayscale(image: CGImage, theSize: NSSize) -> NSImage? {
         let context = CIContext(options: nil)
-        // CIPhotoEffectNoir
-        // CIPhotoEffectMono
-        // CIPhotoEffectTonal
+        
         if let filter = CIFilter(name: "CIPhotoEffectTonal") {
                         
             filter.setValue(CIImage(cgImage: image), forKey: kCIInputImageKey)
