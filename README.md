@@ -1,4 +1,8 @@
 # Jamf Printer Manager
+
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/jamf/jamf-printer-manager?display_name=tag) ![GitHub all releases](https://img.shields.io/github/downloads/jamf/jamf-printer-manager/total)  ![GitHub latest release](https://img.shields.io/github/downloads/jamf/jamf-printer-manager/latest/total)
+ ![GitHub issues](https://img.shields.io/github/issues-raw/jamf/jamf-printer-manager) ![GitHub closed issues](https://img.shields.io/github/issues-closed-raw/jamf/jamf-printer-manager) ![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/jamf/jamf-printer-manager) ![GitHub closed pull requests](https://img.shields.io/github/issues-pr-closed-raw/jamf/jamf-printer-manager)
+
 macOS App to upload printer configurations to Jamf Pro
 
 ## Installation
