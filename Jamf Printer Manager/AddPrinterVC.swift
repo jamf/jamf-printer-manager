@@ -4,6 +4,7 @@
 
 
 import Cocoa
+import CryptoKit
 import Foundation
 
 class AddPrinterVC: NSViewController {
@@ -43,6 +44,8 @@ class AddPrinterVC: NSViewController {
     var local_ppd          = ""
     var local_ppd_contents = ""
     var local_ppd_path     = ""
+    
+    var localPrintersDict = [String:[String:String]]()
 
     @IBOutlet var localPrinters_AC: NSArrayController!
     
@@ -129,8 +132,9 @@ class AddPrinterVC: NSViewController {
     }
     
     private func processPlist(thePlist: String, groupingTag: String) {
-
-        var localPrintersDict = [String:[String:String]]()
+//        print("[processPlist] thePlist: \(thePlist)")
+//        var localPrintersDict = [String:[String:String]]()
+        localPrintersDict.removeAll()
         
         let xmlData = try? Data(contentsOf: URL(filePath: printerPlist.path))
         let xmlParser = XMLParser(data: xmlData ?? Data())
@@ -140,6 +144,7 @@ class AddPrinterVC: NSViewController {
         if xmlParser.parse() {
             for thePrinter in delegate.printerArray {
                 if thePrinter.name != "" {
+//                    print("[processPlist] printer name: \(thePrinter.name)")
                     localPrintersDict[thePrinter.name] = ["cups_name" : thePrinter.cups_name, "location" : thePrinter.location, "model" : thePrinter.model, "uri" : thePrinter.uri]
                 }
             }
@@ -149,6 +154,27 @@ class AddPrinterVC: NSViewController {
         let ppdDict = ppdInfo(cupsName: "")
         var addToList = true
         for (key, value) in localPrintersDict {
+            let local_ppd_info = ppdDict[value["cups_name"]!] ?? [:]
+//            print("[processPlist] key: \(key) \t value: \(value)")
+//            print("[processPlist] local printer name: \(value["name"] ?? "unknown")")
+            
+            if let indexOfPrinter = existingPrintersArray.firstIndex(where: { $0.uri == value["uri"] ?? "" }) {
+//                print("[processPlist] index of printer: \(indexOfPrinter)")
+                let printerPpd = local_ppd_info["ppd_contents"] ?? ""
+                
+                let localPpdData = Data(printerPpd.xmlDecode.utf8)
+                let serverPpdData = Data(existingPrintersArray[indexOfPrinter].ppd_contents.utf8)
+//                                print("[processPlist] printerPpd: \(SHA256.hash(data: localPpdData))")
+//                                print("[processPlist] existing printer ppd: \(SHA256.hash(data: serverPpdData))")
+//                                print("[processPlist] printerPpd: -\(printerPpd.xmlDecode)-")
+//                                print("[processPlist] existing printer ppd: -\(existingPrintersArray[indexOfPrinter].ppd_contents)-")
+                
+//                if existingPrintersArray[indexOfPrinter].ppd_contents == printerPpd.xmlDecode {
+                if SHA256.hash(data: localPpdData) == SHA256.hash(data: serverPpdData) {
+                    print("[processPlist] skip printer: \(key)")
+                    addToList = false
+                }
+            }
             
             if existingPrintersArray.firstIndex(where: { $0.uri == value["uri"]?.xmlDecode }) != nil && existingPrintersArray.firstIndex(where: { $0.cups_name == value["cups_name"] }) != nil {
                 WriteToLog.shared.message(stringOfText: "\(String(describing: value["cups_name"])) is already available in Jamf Pro.")
@@ -156,15 +182,17 @@ class AddPrinterVC: NSViewController {
             }
 
             if addToList && value["cups_name"] != nil {
-                let local_ppd_info = ppdDict[value["cups_name"]!] ?? [:]
+//                let local_ppd_info = ppdDict[value["cups_name"]!] ?? [:]
 
                 if local_ppd_info["ppd_contents"] != nil {
                     localPrinters_AC.addObject(PrinterInfo(id: "", name: key.xmlDecode, category: "", uri: value["uri"] ?? "", cups_name: value["cups_name"] ?? "", location: value["location"]?.xmlDecode ?? "", model: value["model"] ?? "", make_default: "false", shared: value["shared"] ?? "false", info: value["info"]?.xmlDecode ?? "", notes: value["notes"]?.xmlDecode ?? "", use_generic: "false", ppd: local_ppd_info["ppd_file_name"] ?? "", ppd_contents: local_ppd_info["ppd_contents"] ?? "", ppd_path: local_ppd_info["ppd_file_path"] ?? "", os_req: value["os_requirements"] ?? ""))
                 } else {
+                    print("[processPlist] skip printer, PPD file was not found for: \(key)")
                     WriteToLog.shared.message(stringOfText: "PPD file was not found for \(key)")
                 }
             } else {
-                addToList.toggle()
+                print("[processPlist] skip printer: \(key)")
+                addToList = true
             }
         }
         localPrinters_AC.rearrangeObjects()
@@ -202,36 +230,44 @@ class AddPrinterVC: NSViewController {
             }
             
             var i = 0
-            
             var eof = false
+            var currentPrinter = ""
+            
             while i < outputArray.count-1 && !eof {
-                while outputArray[i].suffix(4) != ".ppd" {
-                    if i < outputArray.count-1 {
-                        i += 1
-                    } else {
-                        eof = true
-                        break
-                    }
-                }
-                if !eof {
-                    let ppd_info_array = outputArray[i].components(separatedBy: " ")
-                    if ppd_info_array.count > 0 {
-                        ppd_file_path = ppd_info_array[1]
-                        if ppd_file_path != "" {
-                            let ppd_url = URL(fileURLWithPath: ppd_file_path)
-                            ppd_file_name = ppd_url.lastPathComponent
-                            
-                            let cups_name = String(ppd_file_name.dropLast(4))
-                            ppd_contents = try String(contentsOf: ppd_url, encoding: .utf8).xmlEncode
-                            if cups_name != "" {
-                                ppdDict.updateValue(["ppd_file_path" : ppd_file_path, "ppd_contents" : ppd_contents], forKey: cups_name)
+//                print("theLine: \(theLine)")
+                let theLineArray = outputArray[i].components(separatedBy: ": ")
+                if theLineArray.count > 1 {
+//                    print("theLine[1]: \(theLineArray[1])")
+                    if localPrintersDict[theLineArray[1]] != nil {
+//                        print("found printer: \(theLineArray[1])")
+                        currentPrinter = theLineArray[1]
+                        while i < outputArray.count-1 && outputArray[i].range(of: "^\\t", options: .regularExpression) != nil {
+                            if outputArray[i].range(of: ".ppd$", options: .regularExpression) != nil {
+                                let theLineArray2 = outputArray[i].components(separatedBy: ": ")
+                                if theLineArray2.count > 1 {
+                                    let ppd_file_path = theLineArray2[1]
+//                                    print("ppd file: \(ppd_file_path)\n")
+                                    if ppd_file_path != "" {
+                                        let ppd_url = URL(fileURLWithPath: ppd_file_path)
+                                        ppd_file_name = ppd_url.lastPathComponent
+                                        
+                                        let cups_name = String(ppd_file_name.dropLast(4))
+                                        ppd_contents = try String(contentsOf: ppd_url, encoding: .utf8).xmlEncode
+                                        if ppd_contents.last == "\n" || ppd_contents == "\r" {
+                                            ppd_contents = String(ppd_contents.dropLast())
+                                        }
+                                        if cups_name != "" {
+                                            ppdDict.updateValue(["ppd_file_path" : ppd_file_path, "ppd_contents" : ppd_contents], forKey: cups_name)
+                                        }
+                                    }
+                                }
                             }
+                            i += 1
                         }
                     }
-                    i += 1
                 }
+                i += 1
             }
-
         } catch {
             WriteToLog.shared.message(stringOfText: "Error getting ppd info for \(cupsName): \(error.localizedDescription)")
         }

@@ -129,6 +129,7 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
     var uploadsComplete        = false
     var sortedDisplayNames      = [String]()
     var lastServer             = ""
+    var lastUser               = ""
     var lastServerDN           = ""
 
     @IBOutlet weak var saveCreds_button: NSButton!
@@ -366,8 +367,10 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
     }
     
     func credentialsCheck() {
+        print("server: \(jamfProServer_textfield.stringValue.fqdnFromUrl)")
+        print("  user: \(jamfProUsername_textfield.stringValue.fqdnFromUrl)")
         let accountDict = Credentials.shared.retrieve(service: jamfProServer_textfield.stringValue.fqdnFromUrl, account: jamfProUsername_textfield.stringValue)
-        
+        print("accountDict: \(accountDict)")
         if accountDict.count == 1 {
             for (username, password) in accountDict {
                 jamfProUsername_textfield.stringValue = username
@@ -472,6 +475,8 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
         jamfProUsername_textfield.delegate = self
         
         lastServer = defaults.string(forKey: "currentServer") ?? ""
+        lastUser = defaults.string(forKey: "username") ?? ""
+        jamfProUsername_textfield.stringValue = lastUser
         print("[viewDidLoad] lastServer: \(lastServer)")
         var foundServer = false
                 

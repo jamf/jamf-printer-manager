@@ -9,7 +9,7 @@ let kSecAttrAccountString          = NSString(format: kSecAttrAccount)
 let kSecValueDataString            = NSString(format: kSecValueData)
 let kSecClassGenericPasswordString = NSString(format: kSecClassGenericPassword)
 let keychainQ                      = DispatchQueue(label: "com.jamf.creds", qos: DispatchQoS.background)
-let prefix                         = "JamfPrinterManager"
+//let prefix                         = "JamfPrinterManager"
 let sharedPrefix                   = "JSK"
 let accessGroup                    = "483DWKW443.jamfie.SharedJSK"
 
@@ -51,10 +51,46 @@ class Credentials {
                                     if let addErr = SecCopyErrorMessageString(addStatus, nil) {
                                         print("[addStatus] Write failed for new credentials after deleting: \(addErr)")
                                     }
+                                } else {
+                                    print("[Credentials.addStatus] Write succeeded for new credentials: \(keychainItemName)")
                                 }
                             }
                         }
                     } else {
+                        let keychainQuery1 = [kSecClass as String: kSecClassGenericPasswordString,
+                                              kSecAttrService as String: keychainItemName,
+                                              kSecAttrAccessGroup as String: accessGroup,
+                                              kSecUseDataProtectionKeychain as String: true,
+                                              kSecAttrAccount as String: account,
+                                              kSecMatchLimit as String: kSecMatchLimitOne,
+                                              kSecReturnAttributes as String: true] as [String : Any]
+                                                
+                        var existingAccounts = [String:String]()
+                        for (username, password) in accountCheck {
+                            existingAccounts[username] = password
+                        }
+                        if existingAccounts[account] != nil {
+                        // credentials already exist, try to update
+                            if existingAccounts[account] != credential {
+                                let updateStatus = SecItemUpdate(keychainQuery1 as CFDictionary, [kSecValueDataString:password] as [NSString : Any] as CFDictionary)
+                                print("[Credentials.save] updateStatus result: \(updateStatus)")
+                            } else {
+                                print("[Credentials.save] password for \(account) is up-to-date")
+                            }
+                        } else {
+//                            print("[addStatus] save password for: \(account)")
+                            let addStatus = SecItemAdd(keychainQuery as CFDictionary, nil)
+                            if (addStatus != errSecSuccess) {
+                                if let addErr = SecCopyErrorMessageString(addStatus, nil) {
+                                    print("[Credentials.save.addStatus] Write2 failed for new credentials: \(addErr)")
+                                }
+                            } else {
+                                print("[Credentials.save.addStatus] Write2 succeeded for new credentials: \(service)")
+                            }
+                        }
+
+                        
+                        /*
                         keychainQuery = [kSecClass as String: kSecClassGenericPasswordString,
                                          kSecAttrService as String: keychainItemName,
                                          kSecMatchLimit as String: kSecMatchLimitOne,
@@ -74,6 +110,7 @@ class Credentials {
                                 }
                             }
                         }
+                        */
                     }
                 }
             }
@@ -87,10 +124,17 @@ class Credentials {
         if useApiClient == 1 {
             theService = "apiClient-" + theService
         }
-        var keychainItemName = sharedPrefix + "-" + theService
+        let keychainItemName = sharedPrefix + "-" + theService
 
         keychainResult = itemLookup(service: keychainItemName)
         
+        if keychainResult.count > 1 && account != "" {
+            for (username, password) in keychainResult {
+                if username == account {
+                    return [username:password]
+                }
+            }
+        }
         return keychainResult
     }
     
