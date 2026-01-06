@@ -1,5 +1,5 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 import AppKit
@@ -7,6 +7,77 @@ import Cocoa
 import Foundation
 
 class AboutVC: NSViewController {
+    
+    @IBOutlet weak var optOut_button: NSButton!
+    
+    @IBAction func optOut_action(_ sender: NSButton) {
+        userDefaults.set(sender.state == .on, forKey: "optOut")
+        TelemetryDeckConfig.optOut = (sender.state == .on)
+    }
+    
+    let supportText = """
+    The Jamf Printer Manager application uploads local printer configuration to Jamf Pro.
+    
+    By default the app sends basic hardware, OS, and usage data for the app. Data is sent anonymously to https://telemetrydeck.com and used to aid in application development. To disable the sending of data click the 'Opt out of analytics' below.
+
+    """
+
+    let feedback = """
+
+    Please share feedback by filing an issue.
+
+    """
+
+    let warningText = """
+
+    Warning: Failure to test Jamf Printer Manager thoroughly on non production devices could result in printer misconfigurations on production devices.
+
+    """
+
+    let agreementText = """
+        
+    This software is licensed under the terms of the Jamf Concepts Use Agreement
+
+    Copyright xxxx, Jamf Software, LLC.
+    """
+
+    func formattedText() -> NSAttributedString {
+        let basicFont = NSFont.systemFont(ofSize: 12)
+        let basicAttributes = [NSAttributedString.Key.font: basicFont, .foregroundColor: defaultTextColor]
+        let supportText = NSMutableAttributedString(string: supportText, attributes: basicAttributes)
+        
+        let tdRange  = supportText.mutableString.range(of: "https://telemetrydeck.com")
+        if tdRange.location != NSNotFound {
+            supportText.addAttribute(NSAttributedString.Key.link, value: "https://telemetrydeck.com", range: tdRange)
+        }
+        
+        let aboutString = supportText
+        
+        let currentYear = "\(Calendar.current.component(.year, from: Date()))"
+        
+        let feedbackString = NSMutableAttributedString(string: feedback, attributes: basicAttributes)
+        
+        let issuesRange  = feedbackString.mutableString.range(of: "filing an issue")
+        if issuesRange.location != NSNotFound {
+            feedbackString.addAttribute(NSAttributedString.Key.link, value: "https://github.com/Jamf-Concepts/wallpaper-designer/issues", range: issuesRange)
+        }
+        aboutString.append(feedbackString)
+        
+        let warningFont = NSFont(name: "HelveticaNeue-Italic", size: 12)
+    //        let warningFont = NSFont.systemFont(ofSize: 12)
+        let warningAttributes = [NSAttributedString.Key.font: warningFont, .foregroundColor: defaultTextColor]
+        let warningString = NSMutableAttributedString(string: warningText, attributes: warningAttributes as [NSAttributedString.Key : Any])
+        aboutString.append(warningString)
+        
+        let agreementString = NSMutableAttributedString(string: agreementText.replacingOccurrences(of: "Copyright xxxx", with: "Copyright \(currentYear)"), attributes: basicAttributes)
+        let foundRange        = agreementString.mutableString.range(of: "Jamf Concepts Use Agreement")
+        if foundRange.location != NSNotFound {
+            agreementString.addAttribute(NSAttributedString.Key.link, value: "https://resources.jamf.com/documents/jamf-concept-projects-use-agreement.pdf", range: foundRange)
+        }
+        aboutString.append(agreementString)
+        
+        return aboutString
+    }
     
     @IBOutlet weak var about_image: NSImageView!
     

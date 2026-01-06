@@ -1,5 +1,5 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 
@@ -8,6 +8,8 @@ import CryptoKit
 import Foundation
 
 class AddPrinterVC: NSViewController {
+    
+    let printerManager = PrinterManager()
         
     @IBOutlet weak var refresh_Button: NSButton!
     
@@ -15,10 +17,8 @@ class AddPrinterVC: NSViewController {
         let tmpArray = localPrinters_AC.arrangedObjects as! [PrinterInfo]
         let theRange = IndexSet(0..<tmpArray.count)
         localPrinters_AC.remove(atArrangedObjectIndexes: theRange)
-        
-        let cupsXML = cupsInfo(cupsFileName: printerPlist.path)
-        
-        processPlist(thePlist: cupsXML, groupingTag: "dict")
+                
+        processPlist()
         localPrintersArray.removeAll()
         localPrintersArray = localPrinters_AC.arrangedObjects as! [PrinterInfo]
     }
@@ -27,7 +27,7 @@ class AddPrinterVC: NSViewController {
     @IBOutlet weak var category_Button: NSPopUpButton!
     @IBOutlet weak var category_Menu: NSMenu!
     @IBAction func category_Action(_ sender: Any) {
-        defaults.set(category_Button.titleOfSelectedItem, forKey: "selectedCategory")
+        userDefaults.set(category_Button.titleOfSelectedItem, forKey: "selectedCategory")
     }
     
     var selectedPrinterArray = [PrinterInfo]()
@@ -60,7 +60,7 @@ class AddPrinterVC: NSViewController {
             _ = Alert.shared.display(header: "Attention:", message: "At least one printer must be selected.", secondButton: "")
         } else {
             add_Button.isEnabled = false
-            var addedPrinters = 0
+//            var addedPrinters = 0
             let selectedCategory = (( category_Button.titleOfSelectedItem == "None" ) ? "":category_Button.titleOfSelectedItem) ?? ""
             localPrintersArray = localPrinters_AC.arrangedObjects as! [PrinterInfo]
             
@@ -76,13 +76,13 @@ class AddPrinterVC: NSViewController {
     
     private func addPrinter(arrayIndex: Int, selectedPrinters: [Int], selectedCategory: String, addedPrinters: Int) {
         var added         = addedPrinters
-        var selectedIndex = selectedPrinters[arrayIndex]
+        let selectedIndex = selectedPrinters[arrayIndex]
 
         let printerXML = """
 <?xml version="1.0" encoding="UTF-8"?>
 <printer>
-<name>\(localPrintersArray[selectedIndex].name.xmlEncode)</name>
-<category>\(String(describing: selectedCategory).xmlEncode)</category>
+<name><![CDATA[\(localPrintersArray[selectedIndex].name.xmlEncode)]]></name>
+<category>\(selectedCategory.xmlEncode)</category>
 <uri>\(localPrintersArray[selectedIndex].uri.xmlEncode)</uri>
 <CUPS_name>\(localPrintersArray[selectedIndex].cups_name)</CUPS_name>
 <location>\(localPrintersArray[selectedIndex].location.xmlEncode)</location>
@@ -104,16 +104,15 @@ class AddPrinterVC: NSViewController {
             let (statusCode, httpReply) = result
                         
             if statusCode > 299 {
-                WriteToLog.shared.message(stringOfText: "Error creating \(localPrintersArray[selectedIndex].name).  Status code: \(statusCode)")
-                WriteToLog.shared.message(stringOfText: "HTTP reply: \(httpReply)")
-                _ = Alert.shared.display(header: "", message: "Error creating \(localPrintersArray[selectedIndex].name).  Status code: \(statusCode)", secondButton: "")
+                WriteToLog.shared.message("Error creating \(localPrintersArray[selectedIndex].name).  Status code: \(statusCode)")
+                _ = Alert.shared.display(header: "", message: "Error creating \(localPrintersArray[selectedIndex].name).", secondButton: "")
 
             } else {
                 selectedPrinterArray.append(localPrintersArray[selectedIndex])
                 let newID = betweenTags(xmlString: httpReply as! String, startTag: "<id>", endTag: "</id>", includeTags: false)
                 selectedPrinterArray.last?.id = "\(newID)"
                 selectedPrinterArray.last?.category = "\(String(describing: selectedCategory))"
-                WriteToLog.shared.message(stringOfText: "\(localPrintersArray[selectedIndex].name) has been added to Jamf Pro.")
+                WriteToLog.shared.message("\(localPrintersArray[selectedIndex].name) has been added to Jamf Pro.")
 
                 localPrinters_AC.remove(atArrangedObjectIndex: selectedIndex-addedPrinters)
                 localPrinters_AC.rearrangeObjects()
@@ -131,148 +130,64 @@ class AddPrinterVC: NSViewController {
         }
     }
     
-    private func processPlist(thePlist: String, groupingTag: String) {
-//        print("[processPlist] thePlist: \(thePlist)")
-//        var localPrintersDict = [String:[String:String]]()
+    private func processPlist() {
+
         localPrintersDict.removeAll()
-        
-        let xmlData = try? Data(contentsOf: URL(filePath: printerPlist.path))
-        let xmlParser = XMLParser(data: xmlData ?? Data())
-
-        let delegate = CupsParser()
-        xmlParser.delegate = delegate
-        if xmlParser.parse() {
-            for thePrinter in delegate.printerArray {
-                if thePrinter.name != "" {
-//                    print("[processPlist] printer name: \(thePrinter.name)")
-                    localPrintersDict[thePrinter.name] = ["cups_name" : thePrinter.cups_name, "location" : thePrinter.location, "model" : thePrinter.model, "uri" : thePrinter.uri]
-                }
-            }
-        }
-        
-        localPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        let ppdDict = ppdInfo(cupsName: "")
         var addToList = true
-        for (key, value) in localPrintersDict {
-            let local_ppd_info = ppdDict[value["cups_name"]!] ?? [:]
-//            print("[processPlist] key: \(key) \t value: \(value)")
-//            print("[processPlist] local printer name: \(value["name"] ?? "unknown")")
-            
-            if let indexOfPrinter = existingPrintersArray.firstIndex(where: { $0.uri == value["uri"] ?? "" }) {
-//                print("[processPlist] index of printer: \(indexOfPrinter)")
-                let printerPpd = local_ppd_info["ppd_contents"] ?? ""
-                
-                let localPpdData = Data(printerPpd.xmlDecode.utf8)
-                let serverPpdData = Data(existingPrintersArray[indexOfPrinter].ppd_contents.utf8)
-//                                print("[processPlist] printerPpd: \(SHA256.hash(data: localPpdData))")
-//                                print("[processPlist] existing printer ppd: \(SHA256.hash(data: serverPpdData))")
-//                                print("[processPlist] printerPpd: -\(printerPpd.xmlDecode)-")
-//                                print("[processPlist] existing printer ppd: -\(existingPrintersArray[indexOfPrinter].ppd_contents)-")
-                
-//                if existingPrintersArray[indexOfPrinter].ppd_contents == printerPpd.xmlDecode {
-                if SHA256.hash(data: localPpdData) == SHA256.hash(data: serverPpdData) {
-                    print("[processPlist] skip printer: \(key)")
-                    addToList = false
+        
+        let printers = printerManager.getInstalledPrinters()
+        if printers.count == 0 {
+            _ = Alert.shared.display(header: "Attention:", message: "No local printers found that can be added to Jamf Pro.", secondButton: "")
+            return
+        }
+        for printer in printers {
+            if !(printer.name.isEmpty || printer.cups_name.isEmpty) {
+                let ppd_url = URL(fileURLWithPath: printer.ppd_path)
+                do {
+                    var ppd_contents = try String(contentsOf: ppd_url, encoding: .utf8).xmlEncode
+                        if ppd_contents.last == "\n" || ppd_contents == "\r" {
+                            ppd_contents = String(ppd_contents.dropLast())
+                        }
+                    printer.ppd_contents = ppd_contents
+                        
+                        if let indexOfPrinter = existingPrintersArray.firstIndex(where: { $0.uri == printer.uri }) {
+                            let localPpdData = Data(ppd_contents.xmlDecode.utf8)
+                            let serverPpdData = Data(existingPrintersArray[indexOfPrinter].ppd_contents.utf8)
+                            //                                print("[processPlist] printerPpd: \(SHA256.hash(data: localPpdData))")
+                            //                                print("[processPlist] existing printer ppd: \(SHA256.hash(data: serverPpdData))")
+                            //                                print("[processPlist] printerPpd: -\(printerPpd.xmlDecode)-")
+                            //                                print("[processPlist] existing printer ppd: -\(existingPrintersArray[indexOfPrinter].ppd_contents)-")
+                            
+                            if SHA256.hash(data: localPpdData) == SHA256.hash(data: serverPpdData) {
+                                addToList = false
+                            }
+                        }
+                        
+                        if existingPrintersArray.firstIndex(where: { $0.uri == printer.uri.xmlDecode }) != nil && existingPrintersArray.firstIndex(where: { $0.cups_name == printer.cups_name.xmlDecode }) != nil {
+                            WriteToLog.shared.message("\(String(describing: printer.cups_name.xmlDecode)) is already available in Jamf Pro.")
+                            addToList = false
+                        }
+                        
+                        localPrintersDict[printer.name] = ["cups_name" : printer.cups_name, "location" : printer.location, "model" : printer.model, "uri" : printer.uri, "ppd_path" : printer.ppd_path, "ppd_contents" : printer.ppd_contents]
+                } catch {
+                    WriteToLog.shared.message("Failed to get ppd ocntents from \(printer.ppd_path). Error: \(error.localizedDescription)")
                 }
             }
             
-            if existingPrintersArray.firstIndex(where: { $0.uri == value["uri"]?.xmlDecode }) != nil && existingPrintersArray.firstIndex(where: { $0.cups_name == value["cups_name"] }) != nil {
-                WriteToLog.shared.message(stringOfText: "\(String(describing: value["cups_name"])) is already available in Jamf Pro.")
-                addToList = false
-            }
+            if addToList && !printer.cups_name.isEmpty {
 
-            if addToList && value["cups_name"] != nil {
-//                let local_ppd_info = ppdDict[value["cups_name"]!] ?? [:]
-
-                if local_ppd_info["ppd_contents"] != nil {
-                    localPrinters_AC.addObject(PrinterInfo(id: "", name: key.xmlDecode, category: "", uri: value["uri"] ?? "", cups_name: value["cups_name"] ?? "", location: value["location"]?.xmlDecode ?? "", model: value["model"] ?? "", make_default: "false", shared: value["shared"] ?? "false", info: value["info"]?.xmlDecode ?? "", notes: value["notes"]?.xmlDecode ?? "", use_generic: "false", ppd: local_ppd_info["ppd_file_name"] ?? "", ppd_contents: local_ppd_info["ppd_contents"] ?? "", ppd_path: local_ppd_info["ppd_file_path"] ?? "", os_req: value["os_requirements"] ?? ""))
+                if !printer.ppd_contents.isEmpty {
+                    localPrinters_AC.addObject(PrinterInfo(id: "", name: printer.name.xmlDecode, category: "", uri: printer.uri.xmlDecode, cups_name: printer.cups_name.xmlDecode, location: printer.location.xmlDecode, model: printer.model, make_default: "false", shared: printer.shared, info: printer.info.xmlDecode, notes: printer.notes.xmlDecode , use_generic: "false", ppd: printer.ppd, ppd_contents: printer.ppd_contents, ppd_path: printer.ppd_path, os_req: printer.os_req))
                 } else {
-                    print("[processPlist] skip printer, PPD file was not found for: \(key)")
-                    WriteToLog.shared.message(stringOfText: "PPD file was not found for \(key)")
+                    WriteToLog.shared.message("PPD file was not found for \(printer.name.xmlDecode)")
+                    WriteToLog.shared.message("[processPlist] ppd path: \(printer.ppd_path.xmlDecode)")
                 }
             } else {
-                print("[processPlist] skip printer: \(key)")
                 addToList = true
             }
         }
         localPrinters_AC.rearrangeObjects()
         
-    }
-    
-    private func ppdInfo(cupsName: String) -> [String:[String:String]] {
-        
-        var ppd_file_path = ""
-        var ppd_file_name = ""
-        var ppd_contents  = ""
-        var ppdDict       = [String:[String:String]]()
-        
-        let process = Process()
-
-        process.executableURL = URL(fileURLWithPath: "/usr/bin/lpstat")
-        process.arguments = ["-lp"]
-
-        let outputPipe = Pipe()
-        let errorPipe = Pipe()
-        process.standardOutput = outputPipe
-        process.standardError = errorPipe
-
-        do {
-            try process.run()
-
-            let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
-            let outputArray = String(decoding: outputData, as: UTF8.self).components(separatedBy: "\n")
-            
-            let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
-            let error = String(decoding: errorData, as: UTF8.self)
-            
-            if error != "" {
-                WriteToLog.shared.message(stringOfText: "Error running /usr/bin/lpstat -lp \n                \(error)")
-            }
-            
-            var i = 0
-            var eof = false
-            var currentPrinter = ""
-            
-            while i < outputArray.count-1 && !eof {
-//                print("theLine: \(theLine)")
-                let theLineArray = outputArray[i].components(separatedBy: ": ")
-                if theLineArray.count > 1 {
-//                    print("theLine[1]: \(theLineArray[1])")
-                    if localPrintersDict[theLineArray[1]] != nil {
-//                        print("found printer: \(theLineArray[1])")
-                        currentPrinter = theLineArray[1]
-                        while i < outputArray.count-1 && outputArray[i].range(of: "^\\t", options: .regularExpression) != nil {
-                            if outputArray[i].range(of: ".ppd$", options: .regularExpression) != nil {
-                                let theLineArray2 = outputArray[i].components(separatedBy: ": ")
-                                if theLineArray2.count > 1 {
-                                    let ppd_file_path = theLineArray2[1]
-//                                    print("ppd file: \(ppd_file_path)\n")
-                                    if ppd_file_path != "" {
-                                        let ppd_url = URL(fileURLWithPath: ppd_file_path)
-                                        ppd_file_name = ppd_url.lastPathComponent
-                                        
-                                        let cups_name = String(ppd_file_name.dropLast(4))
-                                        ppd_contents = try String(contentsOf: ppd_url, encoding: .utf8).xmlEncode
-                                        if ppd_contents.last == "\n" || ppd_contents == "\r" {
-                                            ppd_contents = String(ppd_contents.dropLast())
-                                        }
-                                        if cups_name != "" {
-                                            ppdDict.updateValue(["ppd_file_path" : ppd_file_path, "ppd_contents" : ppd_contents], forKey: cups_name)
-                                        }
-                                    }
-                                }
-                            }
-                            i += 1
-                        }
-                    }
-                }
-                i += 1
-            }
-        } catch {
-            WriteToLog.shared.message(stringOfText: "Error getting ppd info for \(cupsName): \(error.localizedDescription)")
-        }
-
-        return ppdDict
     }
     
     private func cupsInfo(cupsFileName: String) -> String {
@@ -293,7 +208,7 @@ class AddPrinterVC: NSViewController {
             let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
             cupsPrinters = String(decoding: outputData, as: UTF8.self)
         } catch {
-            WriteToLog.shared.message(stringOfText: "Error reading \(cupsFileName): \(error.localizedDescription)")
+            WriteToLog.shared.message("Error reading \(cupsFileName): \(error.localizedDescription)")
         }
 
         return cupsPrinters
@@ -328,7 +243,7 @@ class AddPrinterVC: NSViewController {
         category_Button.addItems(withTitles: listOfCategories)
         category_Menu.insertItem(NSMenuItem.separator(), at: 1)
 
-        var lastCategory = defaults.string(forKey: "selectedCategory") ?? ""
+        var lastCategory = userDefaults.string(forKey: "selectedCategory") ?? ""
         if lastCategory == "" {
             if category_Button.indexOfItem(withTitle: "Printers") != -1 {
                 lastCategory = "Printers"
@@ -337,21 +252,12 @@ class AddPrinterVC: NSViewController {
             }
         }
         category_Button.selectItem(withTitle: lastCategory)
-                
-        if FileManager.default.fileExists(atPath: "/Library/Preferences/org.cups.printers.plist") {
-                
-            let cupsXML = cupsInfo(cupsFileName: printerPlist.path)
-            
-            if loginAction == "changeServer" {
-                refresh_Action(self)
-                loginAction = ""
-            } else {
-                processPlist(thePlist: cupsXML, groupingTag: "dict")
-            }
+        if loginAction == "changeServer" {
+            refresh_Action(self)
+            loginAction = ""
         } else {
-            _ = Alert.shared.display(header: "Attention:", message: "No local printers found that can be added to Jamf Pro.", secondButton: "")
+            processPlist()
         }
-        
     }
 }
 
@@ -369,7 +275,7 @@ extension AddPrinterVC : NSTableViewDataSource, NSTableViewDelegate {
     
     func tableView(_ tableView: NSTableView, objectValueFor tableColumn: NSTableColumn?, row: Int) -> Any?
     {
-        print("tableView: \(tableView)\t\ttableColumn: \(String(describing: tableColumn))\t\trow: \(row)")
+//        print("tableView: \(tableView)\t\ttableColumn: \(String(describing: tableColumn))\t\trow: \(row)")
         var newString:String = ""
         if (tableView == localPrinters_TableView)
         {

@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		B544852B29F518D4002A70AC /* PrinterInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B544852A29F518D4002A70AC /* PrinterInfoVC.swift */; };
 		B544852D29F5B234002A70AC /* PrinterInfoTabVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B544852C29F5B234002A70AC /* PrinterInfoTabVC.swift */; };
-		B5468A2B2B477F0F007EAD10 /* CupsParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5468A2A2B477F0F007EAD10 /* CupsParser.swift */; };
 		B55866C72AF0101B0069FF98 /* TokenDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B55866C62AF0101B0069FF98 /* TokenDelegate.swift */; };
 		B594A3462A09B9E800DB21CC /* HelpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B594A3452A09B9E800DB21CC /* HelpVC.swift */; };
 		B594A35B2A09C38100DB21CC /* jpm_help.html in Resources */ = {isa = PBXBuildFile; fileRef = B594A35A2A09C38100DB21CC /* jpm_help.html */; };
@@ -29,19 +28,22 @@
 		B5FB633D29E84CA200451F69 /* Credentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB633C29E84CA200451F69 /* Credentials.swift */; };
 		B5FB634129E84E9500451F69 /* Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB634029E84E9500451F69 /* Alert.swift */; };
 		B5FB634329E86F7200451F69 /* XmlDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB634229E86F7200451F69 /* XmlDelegate.swift */; };
-		B5FB634529E886CA00451F69 /* XmlParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB634429E886CA00451F69 /* XmlParser.swift */; };
 		B5FB634729E8CB3800451F69 /* AddPrinterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FB634629E8CB3800451F69 /* AddPrinterVC.swift */; };
 		CE6DAF2729A0958400305A04 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DAF2629A0958400305A04 /* AppDelegate.swift */; };
 		CE6DAF2929A0958400305A04 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DAF2829A0958400305A04 /* ViewController.swift */; };
 		CE6DAF2B29A0958500305A04 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE6DAF2A29A0958500305A04 /* Assets.xcassets */; };
 		CE6DAF2E29A0958500305A04 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6DAF2C29A0958500305A04 /* Main.storyboard */; };
+		CE760B672EEB46BD004B52CD /* TelemetryDeckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760B662EEB467E004B52CD /* TelemetryDeckConfig.swift */; };
+		CED2BD672F0BFFDD00CAF400 /* PrinterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED2BD662F0BFFD700CAF400 /* PrinterModel.swift */; };
+		CED2BD692F0C03C900CAF400 /* GetPrintersDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED2BD682F0C03C900CAF400 /* GetPrintersDelegate.swift */; };
+		CEDE63342EEB7D1D004A58C9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = CEDE63332EEB7D1D004A58C9 /* TelemetryDeck */; };
+		CEE3975B2F0BC19F00168317 /* PrinterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEE3975A2F0BC19F00168317 /* PrinterManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		B51E2EDE2A046D7B00C049D0 /* Notes */ = {isa = PBXFileReference; lastKnownFileType = text; path = Notes; sourceTree = "<group>"; };
 		B544852A29F518D4002A70AC /* PrinterInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrinterInfoVC.swift; sourceTree = "<group>"; };
 		B544852C29F5B234002A70AC /* PrinterInfoTabVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrinterInfoTabVC.swift; sourceTree = "<group>"; };
-		B5468A2A2B477F0F007EAD10 /* CupsParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CupsParser.swift; sourceTree = "<group>"; };
 		B55866C62AF0101B0069FF98 /* TokenDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenDelegate.swift; sourceTree = "<group>"; };
 		B594A3452A09B9E800DB21CC /* HelpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpVC.swift; sourceTree = "<group>"; };
 		B594A35A2A09C38100DB21CC /* jpm_help.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = jpm_help.html; sourceTree = "<group>"; };
@@ -62,7 +64,6 @@
 		B5FB633C29E84CA200451F69 /* Credentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Credentials.swift; sourceTree = "<group>"; };
 		B5FB634029E84E9500451F69 /* Alert.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Alert.swift; sourceTree = "<group>"; };
 		B5FB634229E86F7200451F69 /* XmlDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XmlDelegate.swift; sourceTree = "<group>"; };
-		B5FB634429E886CA00451F69 /* XmlParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XmlParser.swift; sourceTree = "<group>"; };
 		B5FB634629E8CB3800451F69 /* AddPrinterVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPrinterVC.swift; sourceTree = "<group>"; };
 		CE6DAF2329A0958400305A04 /* Jamf Printer Manager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Jamf Printer Manager.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE6DAF2629A0958400305A04 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -70,6 +71,11 @@
 		CE6DAF2A29A0958500305A04 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE6DAF2D29A0958500305A04 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CE6DAF2F29A0958500305A04 /* Jamf_Printer_Manager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Jamf_Printer_Manager.entitlements; sourceTree = "<group>"; };
+		CE760B662EEB467E004B52CD /* TelemetryDeckConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryDeckConfig.swift; sourceTree = "<group>"; };
+		CED2BD662F0BFFD700CAF400 /* PrinterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterModel.swift; sourceTree = "<group>"; };
+		CED2BD682F0C03C900CAF400 /* GetPrintersDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPrintersDelegate.swift; sourceTree = "<group>"; };
+		CEE397592F0BC19F00168317 /* JamfPrinterManager-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JamfPrinterManager-Bridging-Header.h"; sourceTree = "<group>"; };
+		CEE3975A2F0BC19F00168317 /* PrinterManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEDE63342EEB7D1D004A58C9 /* TelemetryDeck in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,24 +132,27 @@
 		CE6DAF2529A0958400305A04 /* Jamf Printer Manager */ = {
 			isa = PBXGroup;
 			children = (
+				CED2BD662F0BFFD700CAF400 /* PrinterModel.swift */,
+				CEE397592F0BC19F00168317 /* JamfPrinterManager-Bridging-Header.h */,
+				CEE3975A2F0BC19F00168317 /* PrinterManager.swift */,
 				B5CA15EA2A0A02BB00CC4754 /* AboutVC.swift */,
 				B5FB634629E8CB3800451F69 /* AddPrinterVC.swift */,
 				B5FB634029E84E9500451F69 /* Alert.swift */,
 				CE6DAF2629A0958400305A04 /* AppDelegate.swift */,
 				B5FB633C29E84CA200451F69 /* Credentials.swift */,
+				CED2BD682F0C03C900CAF400 /* GetPrintersDelegate.swift */,
 				B5FB633429E846D500451F69 /* Globals.swift */,
 				B594A3452A09B9E800DB21CC /* HelpVC.swift */,
 				B5FB633829E84BEB00451F69 /* Logging.swift */,
 				B5FB633629E8494E00451F69 /* LoginVC.swift */,
 				B544852A29F518D4002A70AC /* PrinterInfoVC.swift */,
 				B544852C29F5B234002A70AC /* PrinterInfoTabVC.swift */,
+				CE760B662EEB467E004B52CD /* TelemetryDeckConfig.swift */,
 				B55866C62AF0101B0069FF98 /* TokenDelegate.swift */,
 				B59F0E412B8FF9F500902972 /* ToUVC.swift */,
 				CE6DAF2829A0958400305A04 /* ViewController.swift */,
 				B5FB633A29E84C4300451F69 /* WriteToLog.swift */,
 				B5FB634229E86F7200451F69 /* XmlDelegate.swift */,
-				B5FB634429E886CA00451F69 /* XmlParser.swift */,
-				B5468A2A2B477F0F007EAD10 /* CupsParser.swift */,
 				CE6DAF2A29A0958500305A04 /* Assets.xcassets */,
 				B594A35A2A09C38100DB21CC /* jpm_help.html */,
 				B594A3532A09C26700DB21CC /* images */,
@@ -198,6 +208,9 @@
 				Base,
 			);
 			mainGroup = CE6DAF1A29A0958400305A04;
+			packageReferences = (
+				CEDE63322EEB7D1D004A58C9 /* XCRemoteSwiftPackageReference "SwiftSDK" */,
+			);
 			productRefGroup = CE6DAF2429A0958400305A04 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -254,16 +267,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE6DAF2929A0958400305A04 /* ViewController.swift in Sources */,
+				CED2BD672F0BFFDD00CAF400 /* PrinterModel.swift in Sources */,
+				CE760B672EEB46BD004B52CD /* TelemetryDeckConfig.swift in Sources */,
 				B544852D29F5B234002A70AC /* PrinterInfoTabVC.swift in Sources */,
 				CE6DAF2729A0958400305A04 /* AppDelegate.swift in Sources */,
 				B594A3462A09B9E800DB21CC /* HelpVC.swift in Sources */,
 				B5FB633729E8494E00451F69 /* LoginVC.swift in Sources */,
-				B5FB634529E886CA00451F69 /* XmlParser.swift in Sources */,
+				CED2BD692F0C03C900CAF400 /* GetPrintersDelegate.swift in Sources */,
 				B5FB633D29E84CA200451F69 /* Credentials.swift in Sources */,
 				B5FB634729E8CB3800451F69 /* AddPrinterVC.swift in Sources */,
 				B55866C72AF0101B0069FF98 /* TokenDelegate.swift in Sources */,
+				CEE3975B2F0BC19F00168317 /* PrinterManager.swift in Sources */,
 				B5FB633B29E84C4400451F69 /* WriteToLog.swift in Sources */,
-				B5468A2B2B477F0F007EAD10 /* CupsParser.swift in Sources */,
 				B544852B29F518D4002A70AC /* PrinterInfoVC.swift in Sources */,
 				B5FB633929E84BEB00451F69 /* Logging.swift in Sources */,
 				B5FB633529E846D500451F69 /* Globals.swift in Sources */,
@@ -417,7 +432,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 483DWKW443;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = YES;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Jamf-Printer-Manager-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Jamf Printer Manager";
@@ -430,11 +457,13 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 2.0.0;
+				OTHER_LDFLAGS = "-lcups";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.ce.printermanager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Jamf Printer Manager/JamfPrinterManager-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -451,7 +480,19 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 483DWKW443;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = NO;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = YES;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Jamf-Printer-Manager-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Jamf Printer Manager";
@@ -464,11 +505,13 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 2.0.0;
+				OTHER_LDFLAGS = "-lcups";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jamf.ce.printermanager;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/Jamf Printer Manager/JamfPrinterManager-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -495,6 +538,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CEDE63322EEB7D1D004A58C9 /* XCRemoteSwiftPackageReference "SwiftSDK" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/TelemetryDeck/SwiftSDK";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CEDE63332EEB7D1D004A58C9 /* TelemetryDeck */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CEDE63322EEB7D1D004A58C9 /* XCRemoteSwiftPackageReference "SwiftSDK" */;
+			productName = TelemetryDeck;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CE6DAF1B29A0958400305A04 /* Project object */;
 }

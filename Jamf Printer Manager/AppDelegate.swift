@@ -1,5 +1,5 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 import Cocoa
@@ -55,15 +55,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @IBAction func showLogFolder(_ sender: Any) {
-        if (FileManager.default.fileExists(atPath: Log.path!)) {
-            NSWorkspace.shared.open(URL(fileURLWithPath: Log.path!))
+        if (FileManager.default.fileExists(atPath: Log.path)) {
+            NSWorkspace.shared.open(URL(fileURLWithPath: Log.path))
         } else {
             _ = Alert.shared.display(header: "Alert", message: "There are currently no log files to display.", secondButton: "")
         }
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-
+        configureTelemetryDeck()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {

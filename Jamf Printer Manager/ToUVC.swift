@@ -1,5 +1,5 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 import Cocoa
@@ -28,10 +28,10 @@ class ToUVC: NSViewController {
     @IBAction func exitOrAccept(_ sender: NSButton) {
         DistributedNotificationCenter.default.removeObserver("AppleInterfaceThemeChangedNotification")
         if sender.title != "Accept" {
-            defaults.set(0, forKey: "shouldShowAgreement")
+            userDefaults.set(0, forKey: "shouldShowAgreement")
             exit(1)
         } else {
-            defaults.set(1, forKey: "shouldShowAgreement")
+            userDefaults.set(1, forKey: "shouldShowAgreement")
             dismiss(self)
         }
     }
