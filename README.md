@@ -5,6 +5,8 @@
 
 macOS App to upload printer configurations to Jamf Pro
 
+Starting with version 2.0.0 the application will submit basic hardware, OS, and Wallpaper Designer application usage to [TelemetryDeck](https://telemetrydeck.com). The data is sent anamously and used to aid in the development of the application. To opt out of data the sending of data click 'Opt out of analytics' at the bottom of the 'About Jamf Printer Manager' window.
+
 ## Installation
 The Jamf Printer Manager app is available in the [Releases](https://github.com/jamf/jamf-printer-manager/releases/latest) section of this repository. Unzip the .zip archive and copy the application to your Applications folder. 
 
