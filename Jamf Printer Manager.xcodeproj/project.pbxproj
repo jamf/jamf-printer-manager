@@ -33,7 +33,6 @@
 		CE6DAF2929A0958400305A04 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE6DAF2829A0958400305A04 /* ViewController.swift */; };
 		CE6DAF2B29A0958500305A04 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE6DAF2A29A0958500305A04 /* Assets.xcassets */; };
 		CE6DAF2E29A0958500305A04 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE6DAF2C29A0958500305A04 /* Main.storyboard */; };
-		CE760B672EEB46BD004B52CD /* TelemetryDeckConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE760B662EEB467E004B52CD /* TelemetryDeckConfig.swift */; };
 		CED2BD672F0BFFDD00CAF400 /* PrinterModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED2BD662F0BFFD700CAF400 /* PrinterModel.swift */; };
 		CED2BD692F0C03C900CAF400 /* GetPrintersDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CED2BD682F0C03C900CAF400 /* GetPrintersDelegate.swift */; };
 		CEDE63342EEB7D1D004A58C9 /* TelemetryDeck in Frameworks */ = {isa = PBXBuildFile; productRef = CEDE63332EEB7D1D004A58C9 /* TelemetryDeck */; };
@@ -41,7 +40,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		B51E2EDE2A046D7B00C049D0 /* Notes */ = {isa = PBXFileReference; lastKnownFileType = text; path = Notes; sourceTree = "<group>"; };
 		B544852A29F518D4002A70AC /* PrinterInfoVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrinterInfoVC.swift; sourceTree = "<group>"; };
 		B544852C29F5B234002A70AC /* PrinterInfoTabVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrinterInfoTabVC.swift; sourceTree = "<group>"; };
 		B55866C62AF0101B0069FF98 /* TokenDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenDelegate.swift; sourceTree = "<group>"; };
@@ -71,7 +69,6 @@
 		CE6DAF2A29A0958500305A04 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE6DAF2D29A0958500305A04 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		CE6DAF2F29A0958500305A04 /* Jamf_Printer_Manager.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Jamf_Printer_Manager.entitlements; sourceTree = "<group>"; };
-		CE760B662EEB467E004B52CD /* TelemetryDeckConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TelemetryDeckConfig.swift; sourceTree = "<group>"; };
 		CED2BD662F0BFFD700CAF400 /* PrinterModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrinterModel.swift; sourceTree = "<group>"; };
 		CED2BD682F0C03C900CAF400 /* GetPrintersDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetPrintersDelegate.swift; sourceTree = "<group>"; };
 		CEE397592F0BC19F00168317 /* JamfPrinterManager-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JamfPrinterManager-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -114,7 +111,6 @@
 		CE6DAF1A29A0958400305A04 = {
 			isa = PBXGroup;
 			children = (
-				B51E2EDE2A046D7B00C049D0 /* Notes */,
 				CE6DAF2529A0958400305A04 /* Jamf Printer Manager */,
 				CE6DAF2429A0958400305A04 /* Products */,
 				B568542529FAB8230004630D /* Frameworks */,
@@ -147,7 +143,6 @@
 				B5FB633629E8494E00451F69 /* LoginVC.swift */,
 				B544852A29F518D4002A70AC /* PrinterInfoVC.swift */,
 				B544852C29F5B234002A70AC /* PrinterInfoTabVC.swift */,
-				CE760B662EEB467E004B52CD /* TelemetryDeckConfig.swift */,
 				B55866C62AF0101B0069FF98 /* TokenDelegate.swift */,
 				B59F0E412B8FF9F500902972 /* ToUVC.swift */,
 				CE6DAF2829A0958400305A04 /* ViewController.swift */,
@@ -268,7 +263,6 @@
 			files = (
 				CE6DAF2929A0958400305A04 /* ViewController.swift in Sources */,
 				CED2BD672F0BFFDD00CAF400 /* PrinterModel.swift in Sources */,
-				CE760B672EEB46BD004B52CD /* TelemetryDeckConfig.swift in Sources */,
 				B544852D29F5B234002A70AC /* PrinterInfoTabVC.swift in Sources */,
 				CE6DAF2729A0958400305A04 /* AppDelegate.swift in Sources */,
 				B594A3462A09B9E800DB21CC /* HelpVC.swift in Sources */,
