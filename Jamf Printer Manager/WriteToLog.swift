@@ -1,21 +1,36 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 import Foundation
-class WriteToLog {
+
+struct Log {
+    static var path     = ""
+    static var file     = "JamfPrinterManager.log"
+    static var filePath = ""
+    static var maxFiles = 42
+}
+
+final class WriteToLog {
     
     static let shared = WriteToLog()
     private init() { }
     
-    func message(stringOfText: String) {
+    func message(_ message: String) {
+        let logString = "\(getCurrentTime()) \(message)\n"
+        NSLog(logString)
 
-         let logString = "\(getCurrentTime()) \(stringOfText)\n"
+        guard let logData = logString.data(using: .utf8) else { return }
+        let logURL = URL(fileURLWithPath: Log.filePath)
 
-         Log.file_FH = FileHandle(forUpdatingAtPath: (Log.path! + Log.file))
-         
-         let historyText = (logString as NSString).data(using: String.Encoding.utf8.rawValue)
-         Log.file_FH?.seekToEndOfFile()
-         Log.file_FH?.write(historyText!)
-     }
+        do {
+            let fileHandle = try FileHandle(forWritingTo: logURL)
+            defer { fileHandle.closeFile() } // Ensure file is closed
+            
+            fileHandle.seekToEndOfFile()
+            fileHandle.write(logData)
+        } catch {
+            NSLog("[Log Error] Failed to write to log file: \(error.localizedDescription)")
+        }
+    }
 }

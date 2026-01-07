@@ -1,46 +1,36 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 import Foundation
 
 func cleanup() {
-    let maxLogFileCount = 42
-    var logArray: [String] = []
-    var logCount: Int = 0
-    do {
-        let logFiles = try FileManager.default.contentsOfDirectory(atPath: Log.path!)
-        
-        for logFile in logFiles {
-            let filePath: String = Log.path! + logFile
-            logArray.append(filePath)
+    guard didRun else {
+        // Delete empty log file
+        do {
+            try FileManager.default.removeItem(atPath: Log.filePath)
+        } catch {
+            WriteToLog.shared.message("Error deleting log file: \(Log.filePath)\n    \(error)\n")
         }
-        logArray.sort()
-        logCount = logArray.count
-        if didRun {
-            if logCount > maxLogFileCount {
-                for i in (0..<logCount-maxLogFileCount) {
-                    
-                    do {
-                        try FileManager.default.removeItem(atPath: logArray[i])
-                    }
-                    catch let error as NSError {
-                        WriteToLog.shared.message(stringOfText: "Error deleting log file:\n    " + logArray[i] + "\n    \(error)")
-                    }
-                }
-            }
-        } else {
-            if logCount > 0 {
-                
-            }
+        return
+    }
+    
+    do {
+        let logFiles = try FileManager.default.contentsOfDirectory(atPath: Log.path)
+            .map { "\(Log.path)/\($0)" }
+            .sorted()
+        
+        let filesToDelete = logFiles.dropLast(Log.maxFiles)
+        
+        for filePath in filesToDelete {
+            WriteToLog.shared.message("Deleting log file: \(filePath)\n")
             do {
-                try FileManager.default.removeItem(atPath: logArray[0])
-            }
-            catch let error as NSError {
-                WriteToLog.shared.message(stringOfText: "Error deleting log file:    \n" + Log.path! + logArray[0] + "    \(error)")
+                try FileManager.default.removeItem(atPath: filePath)
+            } catch {
+                WriteToLog.shared.message("Error deleting log file: \(filePath)\n    \(error)\n")
             }
         }
     } catch {
-        WriteToLog.shared.message(stringOfText: "no log files found")
+        NSLog("No history")
     }
 }

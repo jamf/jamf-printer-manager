@@ -1,5 +1,5 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 
@@ -43,10 +43,10 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
             jamfProUsername_textfield.stringValue = ""
             jamfProPassword_textfield.stringValue = ""
             saveCreds_button.state = NSControl.StateValue(rawValue: 0)
-            defaults.set(0, forKey: "saveCreds")
+            userDefaults.set(0, forKey: "saveCreds")
             hideCreds_button.isHidden = true
             useApiClient_button.state = NSControl.StateValue(rawValue: 0)
-            defaults.set(0, forKey: "useApiClient")
+            userDefaults.set(0, forKey: "useApiClient")
             useApiClient_button.isHidden = true
             quit_Button.title  = "Cancel"
             login_Button.title = "Add"
@@ -113,7 +113,7 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
     @IBOutlet weak var useApiClient_button: NSButton!
     @IBAction func useApiClient_Action(_ sender: NSButton) {
         setLabels()
-        defaults.set(useApiClient_button.state.rawValue, forKey: "useApiClient")
+        userDefaults.set(useApiClient_button.state.rawValue, forKey: "useApiClient")
         fetchPassword()
     }
     
@@ -136,7 +136,7 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
     
     @IBAction func hideCreds_action(_ sender: NSButton) {
         hideCreds_button.image = (hideCreds_button.state.rawValue == 0) ? NSImage(named: NSImage.rightFacingTriangleTemplateName):NSImage(named: NSImage.touchBarGoDownTemplateName)
-        defaults.set("\(hideCreds_button.state.rawValue)", forKey: "hideCreds")
+        userDefaults.set("\(hideCreds_button.state.rawValue)", forKey: "hideCreds")
         setWindowSize(setting: hideCreds_button.state.rawValue)
     }
     
@@ -162,8 +162,8 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
                 if availableServersDict[serverToRemove] != nil {
                     let serverIndex = selectServer_Menu.indexOfItem(withTitle: serverToRemove)
                     selectServer_Menu.removeItem(at: serverIndex)
-                    if defaults.string(forKey: "currentServer") == availableServersDict[serverToRemove]!["server"] as? String {
-                        defaults.set("", forKey: "currentServer")
+                    if userDefaults.string(forKey: "currentServer") == availableServersDict[serverToRemove]!["server"] as? String {
+                        userDefaults.set("", forKey: "currentServer")
                     }
                     availableServersDict[serverToRemove]  = nil
                     lastServer                            = ""
@@ -249,8 +249,8 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
                     }
                     print("[login_action] availableServers: \(availableServersDict)")
                     
-                    defaults.set(JamfProServer.destination, forKey: "currentServer")
-                    defaults.set(JamfProServer.username, forKey: "username")
+                    userDefaults.set(JamfProServer.destination, forKey: "currentServer")
+                    userDefaults.set(JamfProServer.username, forKey: "username")
                     
                     setSelectServerButton(listOfServers: sortedDisplayNames)
                     selectServer_Button.selectItem(withTitle: displayName_TextField.stringValue)
@@ -308,9 +308,9 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
     
     @IBAction func saveCredentials_Action(_ sender: Any) {
         if saveCreds_button.state.rawValue == 1 {
-            defaults.set(1, forKey: "saveCreds")
+            userDefaults.set(1, forKey: "saveCreds")
         } else {
-            defaults.set(0, forKey: "saveCreds")
+            userDefaults.set(0, forKey: "saveCreds")
         }
     }
     
@@ -370,19 +370,18 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
         print("server: \(jamfProServer_textfield.stringValue.fqdnFromUrl)")
         print("  user: \(jamfProUsername_textfield.stringValue.fqdnFromUrl)")
         let accountDict = Credentials.shared.retrieve(service: jamfProServer_textfield.stringValue.fqdnFromUrl, account: jamfProUsername_textfield.stringValue)
-        print("accountDict: \(accountDict)")
         if accountDict.count == 1 {
             for (username, password) in accountDict {
                 jamfProUsername_textfield.stringValue = username
                 jamfProPassword_textfield.stringValue = password
-                let windowState = (defaults.integer(forKey: "hideCreds") == 1) ? 1:0
+                let windowState = (userDefaults.integer(forKey: "hideCreds") == 1) ? 1:0
                 hideCreds_button.isHidden = false
                 saveCreds_button.state = NSControl.StateValue(rawValue: 1)
-                defaults.set(1, forKey: "saveCreds")
+                userDefaults.set(1, forKey: "saveCreds")
                 setWindowSize(setting: windowState)
             }
         } else {
-            jamfProUsername_textfield.stringValue = defaults.string(forKey: "username") ?? ""
+            jamfProUsername_textfield.stringValue = userDefaults.string(forKey: "username") ?? ""
             jamfProPassword_textfield.stringValue = ""
             setWindowSize(setting: 1)
         }
@@ -464,6 +463,8 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        migrateAppGroupSettings()
+        
         header_TextField.stringValue = ""
         header_TextField.wantsLayer = true
         let textFrame = NSTextField(frame: NSRect(x: 0, y: 0, width: 268, height: 1))
@@ -474,8 +475,8 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
         jamfProServer_textfield.delegate   = self
         jamfProUsername_textfield.delegate = self
         
-        lastServer = defaults.string(forKey: "currentServer") ?? ""
-        lastUser = defaults.string(forKey: "username") ?? ""
+        lastServer = userDefaults.string(forKey: "currentServer") ?? ""
+        lastUser = userDefaults.string(forKey: "username") ?? ""
         jamfProUsername_textfield.stringValue = lastUser
         print("[viewDidLoad] lastServer: \(lastServer)")
         var foundServer = false
@@ -539,8 +540,8 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
         }
         
         jamfProServer_textfield.stringValue = lastServer
-        saveCreds_button.state    = NSControl.StateValue(defaults.integer(forKey: "saveCreds"))
-        useApiClient_button.state = NSControl.StateValue(defaults.integer(forKey: "useApiClient"))
+        saveCreds_button.state    = NSControl.StateValue(userDefaults.integer(forKey: "saveCreds"))
+        useApiClient_button.state = NSControl.StateValue(userDefaults.integer(forKey: "useApiClient"))
         setLabels()
         
         if availableServersDict.count != 0 {
@@ -564,5 +565,52 @@ class LoginVC: NSViewController, URLSessionDelegate, NSTextFieldDelegate {
     
     override func viewDidAppear() {
         super.viewDidAppear()
+    }
+    
+    private func migrateAppGroupSettings() {
+        let _sharedContainerUrl     = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.PS2F6S478M.jamfie.SharedJPMA") ?? URL(fileURLWithPath: "/private/tmp")
+        let _sharedSettingsPlistUrl = (_sharedContainerUrl.appendingPathComponent("Library/Preferences/group.PS2F6S478M.jamfie.SharedJPMA.plist"))
+//        WriteToLog.shared.message("[migrateAppGroupSettings] _sharedSettingsPlistUrl: \(_sharedSettingsPlistUrl.path(percentEncoded: false))")
+        
+        if !FileManager.default.fileExists(atPath: sharedSettingsPlistUrl.path(percentEncoded: false)) {
+            print("[viewDidLoad] creating settings file")
+            sharedDefaults!.set(Date(), forKey: "created")
+            sharedDefaults!.set([String:AnyObject](), forKey: "serversDict")
+        }
+        let settingsMigrated = sharedDefaults!.object(forKey: "migrated") as? String ?? "false"
+        if settingsMigrated != "true" {
+            if FileManager.default.fileExists(atPath: _sharedSettingsPlistUrl.path(percentEncoded: false)) {
+                WriteToLog.shared.message("[migrateAppGroupSettings] legacy settings file exists")
+                if FileManager.default.isReadableFile(atPath: _sharedSettingsPlistUrl.path(percentEncoded: false)) {
+                    WriteToLog.shared.message("[migrateAppGroupSettings] file is readable")
+                    do {
+                        let data = try Data(contentsOf: _sharedSettingsPlistUrl)
+                        WriteToLog.shared.message("[migrateAppGroupSettings] file settings to data")
+                        
+                        let plist = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String: Any]
+                        WriteToLog.shared.message("[migrateAppGroupSettings] converted to dictionary")
+                        for (key, value) in plist ?? [:] {
+//                            WriteToLog.shared.message("[migrateAppGroupSettings] setting value for key: \(key)")
+                            print("[migrateAppGroupSettings] setting key: \(key), value: \(value)")
+                            sharedDefaults!.set(value, forKey: key)
+                        }
+                        sharedDefaults!.set("true" as AnyObject, forKey: "migrated")
+                        WriteToLog.shared.message("[migrateAppGroupSettings] migrated settings")
+                    } catch {
+                        WriteToLog.shared.message("[migrateAppGroupSettings] failed to migrate settings")
+                        WriteToLog.shared.message("[migrateAppGroupSettings] error: \(error.localizedDescription)")
+                    }
+                } else {
+                    WriteToLog.shared.message("[migrateAppGroupSettings] file is not readable")
+                }
+            } else {
+                do {
+                    sharedDefaults!.set("true" as AnyObject, forKey: "migrated")
+                    try FileManager.default.copyItem(atPath: sharedSettingsPlistUrl.path(percentEncoded: false), toPath: _sharedSettingsPlistUrl.path(percentEncoded: false))
+                } catch {
+                    WriteToLog.shared.message("[migrateAppGroupSettings] failed to create group preference file")
+                }
+            }
+        }
     }
 }

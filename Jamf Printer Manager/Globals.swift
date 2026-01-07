@@ -1,5 +1,5 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 import Cocoa
@@ -10,7 +10,7 @@ var addedPrinterInfo        = [PrinterInfo]()
 var bookmarkError           = false
 var listOfCategories        = [String]()
 var didRun                  = false
-let defaults                = UserDefaults.standard
+let userDefaults            = UserDefaults.standard
 var existingPrintersArray   = [PrinterInfo]()
 var pendingPrinterInfo: PrinterInfo?
 var printerToUpdate         = [String:String]()
@@ -26,14 +26,14 @@ var defaultTextColor        = isDarkMode ? NSColor.white:NSColor.black
 
 var saveServers            = true
 var maxServerList          = 40
-var appsGroupId            = "group.PS2F6S478M.jamfie.SharedJPMA"
+var appsGroupId            = "483DWKW443.jamfie.SharedJPMA"
 let sharedDefaults         = UserDefaults(suiteName: appsGroupId)
 let sharedContainerUrl     = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appsGroupId)
 let sharedSettingsPlistUrl = (sharedContainerUrl?.appendingPathComponent("Library/Preferences/\(appsGroupId).plist"))!
 var useApiClient           = 0
 
 var isDarkMode: Bool {
-    let mode = defaults.string(forKey: "AppleInterfaceStyle")
+    let mode = userDefaults.string(forKey: "AppleInterfaceStyle")
     return mode == "Dark"
 }
 
@@ -101,13 +101,6 @@ struct JamfProServer {
     static var useApiClient  = 0
 }
 
-struct Log {
-    static var path: String? = (NSHomeDirectory() + "/Library/Logs/")
-    static var file:  String = ""
-    static var file_FH: FileHandle? = FileHandle(forUpdatingAtPath: "")
-    static var maxFiles      = 42
-}
-
 struct Token {
     static var refreshInterval:UInt32 = 20*60  
     static var sourceServer  = ""
@@ -152,7 +145,7 @@ public func storeBookmark(theURL: URL) {
            do {
                try FileManager.default.removeItem(atPath: AppInfo.bookmarksPath)
            } catch {
-               WriteToLog.shared.message(stringOfText: "Failed to reset \(AppInfo.bookmarksPath)")
+               WriteToLog.shared.message("Failed to reset \(AppInfo.bookmarksPath)")
            }
        }
        let bookmarkArchive     = try theURL.bookmarkData(options: .securityScopeAllowOnlyReadAccess, includingResourceValuesForKeys: nil, relativeTo: nil)
@@ -161,7 +154,7 @@ public func storeBookmark(theURL: URL) {
        
    } catch let error as NSError {
        bookmarkError = true
-       WriteToLog.shared.message(stringOfText: "[Global] set bookmark Failed: \(error.description)\n")
+       WriteToLog.shared.message("[Global] set bookmark Failed: \(error.description)\n")
    }
 }
 
@@ -216,6 +209,31 @@ func formattedText() -> NSAttributedString {
 
 
 extension String {
+    func decodingHTMLEntities() -> String {
+        var result = self
+        
+        // Decode hex entities: &#x1F60A;
+        let hexPattern = try! NSRegularExpression(pattern: "&#x([0-9a-fA-F]+);")
+        while let match = hexPattern.firstMatch(in: result, range: NSRange(result.startIndex..., in: result)) {
+            guard let fullRange = Range(match.range, in: result),
+                  let hexRange = Range(match.range(at: 1), in: result),
+                  let codePoint = UInt32(result[hexRange], radix: 16),
+                  let scalar = Unicode.Scalar(codePoint) else { continue }
+            result.replaceSubrange(fullRange, with: String(scalar))
+        }
+        
+        // Decode decimal entities: &#128522;
+        let decPattern = try! NSRegularExpression(pattern: "&#([0-9]+);")
+        while let match = decPattern.firstMatch(in: result, range: NSRange(result.startIndex..., in: result)) {
+            guard let fullRange = Range(match.range, in: result),
+                  let decRange = Range(match.range(at: 1), in: result),
+                  let codePoint = UInt32(result[decRange]),
+                  let scalar = Unicode.Scalar(codePoint) else { continue }
+            result.replaceSubrange(fullRange, with: String(scalar))
+        }
+        
+        return result
+    }
     var fqdnFromUrl: String {
         get {
             var fqdn = ""
@@ -252,12 +270,27 @@ extension String {
     }
     var xmlEncode: String {
         get {
-            var newString = self
-            newString = newString.replacingOccurrences(of: "&", with: "&amp;")
-                .replacingOccurrences(of: "'", with: "&#39;")
-                .replacingOccurrences(of: "<", with: "&lt;")
-                .replacingOccurrences(of: ">", with: "&gt;")
-            return newString
+            var result = ""
+            for scalar in unicodeScalars {
+                switch scalar.value {
+                case 0x20...0x7E where scalar != "&" && scalar != "<" && scalar != ">" && scalar != "\"" && scalar != "'":
+                    result.append(Character(scalar))
+                case 0x26:
+                    result.append("&amp;")
+                case 0x3C:
+                    result.append("&lt;")
+                case 0x3E:
+                    result.append("&gt;")
+                case 0x22:
+                    result.append("&quot;")
+                case 0x27:
+                    result.append("&apos;")
+                default:
+                    // Hex format instead of decimal
+                    result.append("&#x\(String(scalar.value, radix: 16, uppercase: true));")
+                }
+            }
+            return result
         }
     }
     var urlFix: String {

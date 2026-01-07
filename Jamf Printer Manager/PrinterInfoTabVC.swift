@@ -1,5 +1,5 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 
@@ -112,7 +112,7 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
             let printerXML = """
 <?xml version="1.0" encoding="UTF-8"?>
 <printer>
-    <name>\(editPrinterInfo.name.xmlEncode)</name>
+    <name><![CDATA[\(editPrinterInfo.name.xmlEncode)]]></name>
     <category>\(editPrinterInfo.category.xmlEncode)</category>
     <uri>\(editPrinterInfo.uri.xmlEncode)</uri>
     <CUPS_name>\(editPrinterInfo.cups_name.xmlEncode)</CUPS_name>
@@ -134,13 +134,12 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
                 (result: (Int,Any)) in
                 let (statusCode, httpReply) = result
                 if statusCode > 299 {
-                    print("reply: \(httpReply)")
                     _ = Alert.shared.display(header: "Attention:", message: "Failed to update printer. \nStatus code: \(statusCode)", secondButton: "")
-                    WriteToLog.shared.message(stringOfText: "Failed to update \(editPrinterInfo.name)")
-                    WriteToLog.shared.message(stringOfText: "Status code: \(statusCode)")
+                    WriteToLog.shared.message("Failed to update \(editPrinterInfo.name)")
+                    WriteToLog.shared.message("Status code: \(statusCode)")
                     NotificationCenter.default.removeObserver(self, name: .updatedPrintersNotification, object: nil)
                 } else {
-                    WriteToLog.shared.message(stringOfText: "\(editPrinterInfo.name) as been updated")
+                    WriteToLog.shared.message("\(editPrinterInfo.name) as been updated")
                     
                     existingPrintersArray = existingPrintersArray.map { $0.id == editPrinterInfo.id ? editPrinterInfo : $0 }
                     NotificationCenter.default.post(name: .updatedPrintersNotification, object: nil)
@@ -228,7 +227,8 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
         switch self.view.identifier!.rawValue {
         case "general":
             if !EditPrinter.generalDidAppear {
-                displayName_TextField.stringValue = editPrinterInfo.name
+                editPrinterInfo.name = editPrinterInfo.name.decodingHTMLEntities()
+                displayName_TextField.stringValue = editPrinterInfo.name    //.decodingHTMLEntities()
                 
                 let setAsDefaultState = NSControl.StateValue(Int(editPrinterInfo.make_default)!)
                 setAsDefault_Button.state = NSControl.StateValue(setAsDefaultState.rawValue)

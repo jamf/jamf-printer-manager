@@ -1,49 +1,11 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 import AppKit
 import Cocoa
 import Foundation
 import UniformTypeIdentifiers
-
-class PrinterInfo: NSObject {
-    @objc var id           : String
-    @objc var name         : String
-    @objc var category     : String
-    @objc var uri          : String
-    @objc var cups_name    : String
-    @objc var location     : String
-    @objc var model        : String
-    @objc var make_default : String
-    @objc var shared       : String
-    @objc var info         : String
-    @objc var notes        : String
-    @objc var use_generic  : String
-    @objc var ppd          : String
-    @objc var ppd_contents : String
-    @objc var ppd_path     : String
-    @objc var os_req       : String
-    
-    init(id: String, name: String, category: String, uri: String, cups_name: String, location: String, model: String, make_default: String, shared: String, info: String, notes: String, use_generic: String, ppd: String, ppd_contents: String, ppd_path: String, os_req: String) {
-        self.id           = id
-        self.name         = name
-        self.category     = category
-        self.uri          = uri
-        self.cups_name    = cups_name
-        self.location     = location
-        self.model        = model
-        self.make_default = make_default
-        self.shared       = shared
-        self.info         = info
-        self.notes        = notes
-        self.use_generic  = use_generic
-        self.ppd          = ppd
-        self.ppd_contents = ppd_contents
-        self.ppd_path     = ppd_path
-        self.os_req       = os_req
-    }
-}
 
 class ViewController: NSViewController, SendingLoginInfoDelegate {
     
@@ -110,16 +72,16 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
 
             let (statusCode, httpReply) = result
             if statusCode > 299 {
-                WriteToLog.shared.message(stringOfText: "Failed to remover printer: \(printerName)")
-                WriteToLog.shared.message(stringOfText: "              Status code: \(statusCode)")
-                WriteToLog.shared.message(stringOfText: "                    reply: \(httpReply)")
+                WriteToLog.shared.message("Failed to remover printer: \(printerName)")
+                WriteToLog.shared.message("              Status code: \(statusCode)")
+                WriteToLog.shared.message("                    reply: \(httpReply)")
                 if statusCode == 404 {
-                    WriteToLog.shared.message(stringOfText: "\(printerName) has been removed from \(JamfProServer.destination) since it was not found")
+                    WriteToLog.shared.message("\(printerName) has been removed from \(JamfProServer.destination) since it was not found")
                     existingPrinters_AC.remove(atArrangedObjectIndex: selectedPrinters[selectedIndex]-removedPrinters)
                     existingPrinters_AC.rearrangeObjects()
                 }
             } else {
-                WriteToLog.shared.message(stringOfText: "\(printerName) has been removed from \(JamfProServer.destination)")
+                WriteToLog.shared.message("\(printerName) has been removed from \(JamfProServer.destination)")
                 existingPrinters_AC.remove(atArrangedObjectIndex: selectedPrinters[selectedIndex]-removedPrinters)
                 existingPrinters_AC.rearrangeObjects()
 
@@ -163,17 +125,17 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
 <category>\(selectedCategory)</category>
 </printer>
 """
-        print("printerXML: \(printerXML)")
+//        print("printerXML: \(printerXML)")
         let whichPrinter = (existingPrinters_AC.arrangedObjects as! [PrinterInfo])[selectedIndex]
         XmlDelegate.shared.apiAction(method: "PUT", theEndpoint: "printers/id/\(whichPrinter.id)", xmlData: printerXML) { [self]
             (result: (Int,Any)) in
             let (statusCode, _) = result
             if httpSuccess.contains(statusCode) {
-                WriteToLog.shared.message(stringOfText: "Updated category of printer \(whichPrinter.name) to \(selectedCategory)")
+                WriteToLog.shared.message("Updated category of printer \(whichPrinter.name) to \(selectedCategory)")
                 (existingPrinters_AC.arrangedObjects as! [PrinterInfo])[selectedIndex].category = selectedCategory
                 existingPrinters_AC.rearrangeObjects()
             } else {
-                WriteToLog.shared.message(stringOfText: "Failed (status code: \(statusCode)) to update category of printer \(whichPrinter.name) to \(selectedCategory)")
+                WriteToLog.shared.message("Failed (status code: \(statusCode)) to update category of printer \(whichPrinter.name) to \(selectedCategory)")
             }
             updated += 1
             if updated < selectedPrinters.count {
@@ -215,10 +177,6 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         didRun = true
         
         if loginAction != "changeServer" {
-            Log.file = getCurrentTime().replacingOccurrences(of: ":", with: "") + "_JamfPrinterManager.log"
-            if !(FileManager.default.fileExists(atPath: Log.path! + Log.file)) {
-                FileManager.default.createFile(atPath: Log.path! + Log.file, contents: nil, attributes: nil)
-            }
             cleanup()
         } else {
             existingPrintersArray.removeAll()
@@ -231,17 +189,21 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         (JamfProServer.displayName, JamfProServer.destination, JamfProServer.username, JamfProServer.password,saveCredsState) = loginInfo
         let jamfUtf8Creds = "\(JamfProServer.username):\(JamfProServer.password)".data(using: String.Encoding.utf8)
         JamfProServer.base64Creds = (jamfUtf8Creds?.base64EncodedString())!
-
-        WriteToLog.shared.message(stringOfText: "[ViewController] Running \(AppInfo.name) v\(AppInfo.version)")
+        
+        WriteToLog.shared.message("----------------------------------------------------------------------------")
+        WriteToLog.shared.message("    Jamf Printer Manager: v\(AppInfo.version) Build: \(AppInfo.build)")
+        WriteToLog.shared.message("----------------------------------------------------------------------------")
+        WriteToLog.shared.message("TelemetryDeck: \(userDefaults.bool(forKey: "optOut") ? "disabled" : "enabled")")
+        
         let clientType = ( useApiClient == 0 ) ? "username/password":"API client/secret"
-        WriteToLog.shared.message(stringOfText: "Authenticating with \(clientType)")
+        WriteToLog.shared.message("Authenticating with \(clientType)")
         TokenDelegate.shared.getToken(serverUrl: JamfProServer.destination, base64creds: JamfProServer.base64Creds) { [self]
             authResult in
             let (statusCode,theResult) = authResult
             if theResult == "success" {
                 
-                defaults.set(JamfProServer.destination, forKey: "currentServer")
-                defaults.set(JamfProServer.username, forKey: "username")
+                userDefaults.set(JamfProServer.destination, forKey: "currentServer")
+                userDefaults.set(JamfProServer.username, forKey: "username")
                 
                 self.view.window?.title = "Jamf Printer Manager: \(JamfProServer.destination.fqdnFromUrl)"
                 
@@ -251,48 +213,41 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 
                 existingPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
 
-                XmlDelegate.shared.apiAction(method: "GET", theEndpoint: "printers", acceptFormat: "application/json") { [self]
-                    (result: (Int,Any)) in
-                    let (statusCode, allPrinters) = result
-                    if let printerDict = allPrinters as? [String:Any] {
-                        let printerList = printerDict["printers"] as! [[String:Any]]
+                GetPrintersDelegate.shared.apiAction(method: "GET", theEndpoint: "printers", acceptFormat: "application/json") { [self]
+                    (result: (Int,Data)) in
+                    let (statusCode, data) = result
+                    do {
+                        let printerList = try JSONDecoder().decode(JamfProPrinterList.self, from: data)
                         var fetchedPrinters = 0
-                        for thePrinter in printerList {
-                            let printerId = thePrinter["id"] as! Int
-                            let printerName = thePrinter["name"] as! String
-                            
-                            var acceptFormat = "application/json"
-                            XmlDelegate.shared.apiAction(method: "GET", theEndpoint: "printers/id/\(printerId)", xmlData: printerName, acceptFormat: "text/xml") { [self]
-                                (result: (Int,Any)) in
+                        for thePrinter in printerList.printers {
+                            GetPrintersDelegate.shared.apiAction(method: "GET", theEndpoint: "printers/id/\(thePrinter.id)", acceptFormat: "application/json") { [self]
+                                (result: (Int,Data)) in
                                 let (_, printerDetails) = result
                                 fetchedPrinters += 1
-                                
-                                
-                                if let data = "\(printerDetails)".data(using: .utf8) {
-                                    let xmlParser = XMLParser(data: data)
-                                    let delegate = XmlParser()
-                                    xmlParser.delegate = delegate
-                                    if xmlParser.parse() {
-                                        for entry in delegate.printerArray {
-                                            existingPrinters_AC.addObject(PrinterInfo(id: entry.id, name: entry.name.xmlDecode, category: entry.category, uri: entry.uri, cups_name: entry.cups_name, location: entry.location, model: entry.model, make_default: entry.make_default, shared: entry.shared, info: entry.info, notes: entry.notes, use_generic: entry.use_generic, ppd: entry.ppd, ppd_contents: entry.ppd_contents, ppd_path: entry.ppd_path, os_req: entry.os_req))
-                                        }
-                                        existingPrinters_AC.rearrangeObjects()
-                                    }
-                                    
+                                do {
+                                    let jamfProPrinterDetails = try JSONDecoder().decode(JamfProPrinterDetails.self, from: printerDetails)
+                                    let printerDetails = jamfProPrinterDetails.printer
+                                    existingPrinters_AC.addObject(PrinterInfo(id: "\(printerDetails.id)", name: printerDetails.name.xmlDecode.decodingHTMLEntities(), category: printerDetails.category, uri: printerDetails.uri, cups_name: printerDetails.CUPS_name, location: printerDetails.location, model: printerDetails.model, make_default: "\(printerDetails.make_default)", shared: "\(printerDetails.shared)", info: printerDetails.info, notes: printerDetails.notes, use_generic: "\(printerDetails.use_generic)", ppd: printerDetails.ppd, ppd_contents: printerDetails.ppd_contents, ppd_path: printerDetails.ppd_path, os_req: printerDetails.os_requirements))
+                                    existingPrinters_AC.rearrangeObjects()
+                                } catch {
+                                    WriteToLog.shared.message("Failed to decode printer details for \(thePrinter.name), status code: \(statusCode), error: \(error.localizedDescription)")
                                 }
-                                if fetchedPrinters == printerList.count {
+                                
+                                if fetchedPrinters == printerList.printers.count {
                                     fetchCategories()
                                 }
                             }
                         }
-                        if printerList.count == 0 {
+                        if printerList.printers.count == 0 {
                             fetchCategories()
                         }
+                    } catch {
+                        WriteToLog.shared.message("Failed to fetch/decode all printers, status code: \(statusCode), error: \(error.localizedDescription)")
                     }
                 }
             } else {
                 DispatchQueue.main.async { [self] in
-                    WriteToLog.shared.message(stringOfText: "Failed to authenticate, status code: \(statusCode)")
+                    WriteToLog.shared.message("Failed to authenticate, status code: \(statusCode)")
                     performSegue(withIdentifier: "loginView", sender: nil)
                 }
             }
@@ -309,6 +264,33 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        TelemetryDeckConfig.optOut = userDefaults.bool(forKey: "optOut")
+        
+        let logFileURL: URL
+        let fileManager = FileManager.default
+        let logFileName = getCurrentTime().replacingOccurrences(of: ":", with: "") + "_" + Log.file
+        // Get the Logs directory in the app's container
+        let logsDirectory = fileManager.urls(for: .libraryDirectory, in: .userDomainMask).first!.appendingPathComponent("Logs")
+        Log.path = logsDirectory.path
+        // Create the directory if it doesn't exist
+        if !fileManager.fileExists(atPath: Log.path) {
+            do {
+                try fileManager.createDirectory(at: logsDirectory, withIntermediateDirectories: true, attributes: nil)
+                NSLog("[ViewController.viewDidLoad] Created Logs directory at \(logsDirectory)")
+            } catch {
+                NSLog("[ViewController.viewDidLoad] Failed to create Logs directory: \(error.localizedDescription)")
+            }
+        }
+        
+        // Set up the log file URL
+        logFileURL = logsDirectory.appendingPathComponent(logFileName)
+        Log.filePath = logFileURL.path
+        
+        // Create the log file if it doesn't exist
+        if !fileManager.fileExists(atPath: logFileURL.path) {
+            print("[ViewController.viewDidLoad] Create log file: \(logFileURL.path)")
+            fileManager.createFile(atPath: logFileURL.path, contents: nil, attributes: nil)
+        }
         
         NotificationCenter.default.addObserver(self, selector: #selector(addedPrintersNotification(_:)), name: .addedPrintersNotification, object: nil)
         
@@ -317,7 +299,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
             do {
                 try FileManager.default.createDirectory(atPath: app_support_path, withIntermediateDirectories: true, attributes: nil)
             } catch {
-                WriteToLog.shared.message(stringOfText: "Problem creating '/Library/Application Support' folder:  \(error)")
+                WriteToLog.shared.message("Problem creating '/Library/Application Support' folder:  \(error)")
             }
         }
         
@@ -368,7 +350,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
                 let (statusCode, printerRecord) = result
 
                 guard let printerInfoRecord = printerRecord as? [String:AnyObject] else {
-                    WriteToLog.shared.message(stringOfText: "[ViewController] Issue reading current printer record.")
+                    WriteToLog.shared.message("[ViewController] Issue reading current printer record.")
                     spinner_ProgressIndicator.stopAnimation(self)
                     _ = Alert.shared.display(header: "", message: "Unable to read the configuration of \(selectedPrinter.name).  \nStatus Code: \(statusCode)", secondButton: "")
                     existingPrinters_TableView.isEnabled = true
@@ -386,7 +368,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
     }
    
     @objc func addedPrintersNotification(_ notification: Notification) {
-       print("added \(addedPrinterInfo.count) printer(s)")
+        WriteToLog.shared.message("[ViewController] added \(addedPrinterInfo.count) printer(s)")
        existingPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
        existingPrinters_AC.add(contentsOf: addedPrinterInfo)
        existingPrinters_AC.rearrangeObjects()

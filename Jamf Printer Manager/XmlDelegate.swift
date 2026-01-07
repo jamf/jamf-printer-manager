@@ -1,5 +1,5 @@
 //
-//  Copyright 2024, Jamf
+//  Copyright 2026, Jamf
 //
 
 import Cocoa
@@ -26,9 +26,9 @@ class XmlDelegate: NSObject, URLSessionDelegate {
             existingDestUrl = existingDestUrl.urlFix
             
             if method == "GET" && xmlData != "" {
-                WriteToLog.shared.message(stringOfText: "[XmlDelegate.apiAction] Looking up: \(xmlData), id: \(URL(string: existingDestUrl)!.lastPathComponent)")
+                WriteToLog.shared.message("[XmlDelegate.apiAction] Looking up: \(xmlData), id: \(URL(string: existingDestUrl)!.lastPathComponent)")
             } else {
-                WriteToLog.shared.message(stringOfText: "[XmlDelegate.apiAction] Looking up: \(existingDestUrl)")
+                WriteToLog.shared.message("[XmlDelegate.apiAction] Looking up: \(existingDestUrl)")
             }
 
             let destEncodedURL = URL(string: existingDestUrl)
@@ -47,6 +47,7 @@ class XmlDelegate: NSObject, URLSessionDelegate {
                         let destConf = URLSessionConfiguration.default
                         
                         if method.uppercased() == "POST" || method.uppercased() == "PUT" {
+//                            print("[XmlDelegate.apiAction] Adding XML Body: \n\(xmlData)")
                             let encodedXML = xmlData.data(using: String.Encoding.utf8)
                             xmlRequest.httpBody = encodedXML!
                         }
@@ -62,7 +63,7 @@ class XmlDelegate: NSObject, URLSessionDelegate {
                             (data, response, error) -> Void in
                             destSession.finishTasksAndInvalidate()
                             let (_, _, _, tokenAgeInSeconds) = timeDiff(startTime: startDate)
-                            WriteToLog.shared.message(stringOfText: "[XmlDelegate.apiAction] query time for \(method) on \(existingDestUrl): \(tokenAgeInSeconds) seconds")
+                            WriteToLog.shared.message("[XmlDelegate.apiAction] query time for \(method) on \(existingDestUrl): \(tokenAgeInSeconds) seconds")
                             
                             if let httpResponse = response as? HTTPURLResponse {
                                 if httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299 {
@@ -78,12 +79,13 @@ class XmlDelegate: NSObject, URLSessionDelegate {
                                         }
                                     }
                                 } else {
-                                    WriteToLog.shared.message(stringOfText: "[XmlDelegate.apiAction] \(existingDestUrl) lookup encountered an error.  HTTP Status Code: \(httpResponse.statusCode)")
-                                    WriteToLog.shared.message(stringOfText: "[XmlDelegate.apiAction] reply: \(String(describing: String(data: data!, encoding: .utf8)))")
+                                    WriteToLog.shared.message("[XmlDelegate.apiAction] \(existingDestUrl) lookup encountered an error.  HTTP Status Code: \(httpResponse.statusCode)")
+                                    WriteToLog.shared.message("[XmlDelegate.apiAction] reply: \(String(describing: String(data: data!, encoding: .utf8)))")
+                                    WriteToLog.shared.message("[XmlDelegate.apiAction] uploaded xml: \(xmlData)")
                                     completion((httpResponse.statusCode,""))
                                 }
                             } else {
-                                WriteToLog.shared.message(stringOfText: "[XmlDelegate.apiAction] error getting XML for \(existingDestUrl)")
+                                WriteToLog.shared.message("[XmlDelegate.apiAction] error getting XML for \(existingDestUrl)")
                                 completion((0,""))
                             }
                             semaphore.signal()
@@ -93,7 +95,7 @@ class XmlDelegate: NSObject, URLSessionDelegate {
                         task.resume()
                         
                     } else {
-                        WriteToLog.shared.message(stringOfText: "Failed to authenticate to \(existingDestUrl), status code: \(statusCode)")
+                        WriteToLog.shared.message("Failed to authenticate to \(existingDestUrl), status code: \(statusCode)")
                         completion((statusCode,""))
                     }
                 }

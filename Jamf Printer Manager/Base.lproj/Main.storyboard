@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="1SU-tO-ZeM">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="24506" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="1SU-tO-ZeM">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
-        <plugIn identifier="com.apple.WebKit2IBPlugin" version="22690"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24506"/>
+        <plugIn identifier="com.apple.WebKit2IBPlugin" version="24506"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -59,7 +59,7 @@
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sY7-cw-lUL">
-                                <rect key="frame" x="542" y="27" width="83" height="32"/>
+                                <rect key="frame" x="548" y="33" width="71" height="20"/>
                                 <buttonCell key="cell" type="push" title="Accept" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="D9q-p6-BH9">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -76,7 +76,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Zwa-0X-j24">
-                                <rect key="frame" x="452" y="27" width="83" height="32"/>
+                                <rect key="frame" x="458" y="33" width="71" height="20"/>
                                 <buttonCell key="cell" type="push" title="Exit" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BPf-6L-J7h">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -199,19 +199,19 @@ DQ
             <objects>
                 <viewController storyboardIdentifier="about" id="psN-Og-b50" customClass="AboutVC" customModule="Jamf_Printer_Manager" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" id="Gna-mw-NwK">
-                        <rect key="frame" x="0.0" y="0.0" width="595" height="151"/>
+                        <rect key="frame" x="0.0" y="0.0" width="671" height="391"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6VZ-KW-i4V">
-                                <rect key="frame" x="29" y="53" width="86" height="86"/>
+                                <rect key="frame" x="304" y="313" width="64" height="64"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="86" id="01b-4P-ZQI"/>
-                                    <constraint firstAttribute="height" constant="86" id="bF9-9M-ll3"/>
+                                    <constraint firstAttribute="width" constant="64" id="01b-4P-ZQI"/>
+                                    <constraint firstAttribute="height" constant="64" id="bF9-9M-ll3"/>
                                 </constraints>
                                 <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="Idg-FE-CSC"/>
                             </imageView>
                             <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ykH-gb-6Yi">
-                                <rect key="frame" x="144" y="100" width="307" height="39"/>
+                                <rect key="frame" x="182" y="270" width="307" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="303" id="WPL-Nf-rpo"/>
                                     <constraint firstAttribute="height" constant="39" id="apk-xA-5nx"/>
@@ -223,70 +223,84 @@ DQ
                                 </textFieldCell>
                             </textField>
                             <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="0jG-N8-f74">
-                                <rect key="frame" x="144" y="78" width="295" height="21"/>
+                                <rect key="frame" x="188" y="248" width="295" height="21"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="21" id="SvO-lI-5re"/>
                                     <constraint firstAttribute="width" constant="291" id="guZ-Ob-36Z"/>
                                 </constraints>
-                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" id="IJZ-bE-tB7">
+                                <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" alignment="center" id="IJZ-bE-tB7">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
                             </textField>
                             <scrollView borderType="none" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3l9-bb-U8E">
-                                <rect key="frame" x="141" y="10" width="435" height="63"/>
+                                <rect key="frame" x="44" y="67" width="584" height="159"/>
                                 <clipView key="contentView" drawsBackground="NO" id="JG3-Wz-pWL">
-                                    <rect key="frame" x="0.0" y="0.0" width="435" height="63"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="584" height="159"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <textView wantsLayer="YES" editable="NO" drawsBackground="NO" importsGraphics="NO" richText="NO" verticallyResizable="YES" spellingCorrection="YES" smartInsertDelete="YES" id="MBI-0V-BZH">
-                                            <rect key="frame" x="0.0" y="0.0" width="435" height="63"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="584" height="159"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            <size key="minSize" width="435" height="63"/>
-                                            <size key="maxSize" width="466" height="10000000"/>
+                                            <size key="minSize" width="584" height="159"/>
+                                            <size key="maxSize" width="584" height="10000000"/>
                                             <color key="insertionPointColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                         </textView>
                                     </subviews>
                                 </clipView>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="435" id="Jn6-xc-ZDT"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="56" id="OqS-Q2-6xg"/>
+                                    <constraint firstAttribute="height" constant="159" id="4PY-LQ-mbg"/>
+                                    <constraint firstAttribute="width" constant="584" id="8a5-nW-tyu"/>
                                 </constraints>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="seB-Ht-BUm">
                                     <rect key="frame" x="-100" y="-100" width="240" height="16"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="3rz-hZ-91D">
-                                    <rect key="frame" x="419" y="0.0" width="16" height="63"/>
+                                    <rect key="frame" x="567" y="0.0" width="17" height="159"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
+                            <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nnb-tj-9nP">
+                                <rect key="frame" x="44" y="17" width="164" height="32"/>
+                                <buttonCell key="cell" type="check" title="Opt out of analytics" bezelStyle="regularSquare" imagePosition="left" inset="2" id="FtF-4W-a9D">
+                                    <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                    <font key="font" metaFont="system" size="16"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="optOut_action:" target="psN-Og-b50" id="jgN-Y1-gWd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="ykH-gb-6Yi" firstAttribute="top" secondItem="Gna-mw-NwK" secondAttribute="top" constant="12" id="5wa-60-7dl"/>
-                            <constraint firstItem="0jG-N8-f74" firstAttribute="leading" secondItem="ykH-gb-6Yi" secondAttribute="leading" id="6Dl-FI-fzY"/>
-                            <constraint firstItem="6VZ-KW-i4V" firstAttribute="leading" secondItem="Gna-mw-NwK" secondAttribute="leading" constant="29" id="7iH-ff-bNW"/>
+                            <constraint firstItem="ykH-gb-6Yi" firstAttribute="top" secondItem="6VZ-KW-i4V" secondAttribute="bottom" constant="4" id="1pX-kt-ZpX"/>
+                            <constraint firstItem="nnb-tj-9nP" firstAttribute="leading" secondItem="3l9-bb-U8E" secondAttribute="leading" id="B1K-bn-1U8"/>
+                            <constraint firstItem="ykH-gb-6Yi" firstAttribute="centerX" secondItem="Gna-mw-NwK" secondAttribute="centerX" id="FeW-li-18l"/>
                             <constraint firstItem="0jG-N8-f74" firstAttribute="top" secondItem="ykH-gb-6Yi" secondAttribute="bottom" constant="1" id="LE5-mx-fi0"/>
-                            <constraint firstItem="ykH-gb-6Yi" firstAttribute="top" secondItem="6VZ-KW-i4V" secondAttribute="top" id="XiG-Hi-NEz"/>
-                            <constraint firstAttribute="trailing" secondItem="3l9-bb-U8E" secondAttribute="trailing" constant="19" id="YGP-S1-GIa"/>
-                            <constraint firstAttribute="bottom" secondItem="3l9-bb-U8E" secondAttribute="bottom" constant="10" id="ckg-LN-zez"/>
-                            <constraint firstItem="3l9-bb-U8E" firstAttribute="leading" secondItem="0jG-N8-f74" secondAttribute="leading" constant="-5" id="mKN-q6-AYQ"/>
-                            <constraint firstItem="3l9-bb-U8E" firstAttribute="top" secondItem="0jG-N8-f74" secondAttribute="bottom" constant="5" id="pGk-W4-5eo"/>
+                            <constraint firstItem="nnb-tj-9nP" firstAttribute="top" secondItem="3l9-bb-U8E" secondAttribute="bottom" constant="18" id="aug-zU-xBB"/>
+                            <constraint firstItem="6VZ-KW-i4V" firstAttribute="top" secondItem="Gna-mw-NwK" secondAttribute="top" constant="14" id="bMr-Tr-hKP"/>
+                            <constraint firstItem="6VZ-KW-i4V" firstAttribute="centerX" secondItem="Gna-mw-NwK" secondAttribute="centerX" id="cgr-PQ-Upq"/>
+                            <constraint firstAttribute="bottom" secondItem="3l9-bb-U8E" secondAttribute="bottom" constant="67" id="ckg-LN-zez"/>
+                            <constraint firstAttribute="bottom" secondItem="nnb-tj-9nP" secondAttribute="bottom" constant="17" id="fyE-RZ-GQA"/>
+                            <constraint firstItem="3l9-bb-U8E" firstAttribute="centerX" secondItem="Gna-mw-NwK" secondAttribute="centerX" id="lDb-2g-IV2"/>
+                            <constraint firstItem="0jG-N8-f74" firstAttribute="centerX" secondItem="Gna-mw-NwK" secondAttribute="centerX" id="ne5-nA-ABz"/>
+                            <constraint firstItem="3l9-bb-U8E" firstAttribute="top" secondItem="0jG-N8-f74" secondAttribute="bottom" constant="22" id="pGk-W4-5eo"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="about_image" destination="6VZ-KW-i4V" id="hQn-xr-cEW"/>
                         <outlet property="appName_textfield" destination="ykH-gb-6Yi" id="Lsj-Va-LVV"/>
                         <outlet property="license_textfield" destination="MBI-0V-BZH" id="bXx-97-7Gm"/>
+                        <outlet property="optOut_button" destination="nnb-tj-9nP" id="4Et-rk-egF"/>
                         <outlet property="version_textfield" destination="0jG-N8-f74" id="D0b-9F-z0i"/>
                     </connections>
                 </viewController>
                 <customObject id="KRC-Ir-p2f" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-922.5" y="-990.5"/>
+            <point key="canvasLocation" x="-922.5" y="-991"/>
         </scene>
         <!--Split View Controller-->
         <scene sceneID="uE8-lm-bk2">
@@ -1096,7 +1110,7 @@ DQ
                                 </secureTextFieldCell>
                             </secureTextField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9sN-Pr-sEB">
-                                <rect key="frame" x="367" y="12" width="68" height="32"/>
+                                <rect key="frame" x="371" y="19" width="57" height="24"/>
                                 <buttonCell key="cell" type="push" title="Login" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ZeY-nP-cup">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1109,7 +1123,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7hr-Z7-bGs">
-                                <rect key="frame" x="303" y="12" width="60" height="32"/>
+                                <rect key="frame" x="303" y="19" width="50" height="24"/>
                                 <buttonCell key="cell" type="push" title="Quit" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="HOX-2P-li5">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1137,7 +1151,7 @@ DQ
                                 </connections>
                             </button>
                             <button hidden="YES" tag="4" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="N0b-ib-DQZ">
-                                <rect key="frame" x="118" y="62" width="129" height="18"/>
+                                <rect key="frame" x="120" y="63" width="125" height="16"/>
                                 <buttonCell key="cell" type="check" title="Save to Keychain" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="F40-CB-KmJ">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1172,7 +1186,7 @@ DQ
                                 <rect key="frame" x="120" y="176" width="307" height="20"/>
                                 <popUpButtonCell key="cell" type="square" bezelStyle="shadowlessSquare" alignment="left" lineBreakMode="truncatingTail" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gnS-aL-8aj">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="menu"/>
+                                    <font key="font" metaFont="message"/>
                                     <menu key="menu" id="P6V-hr-kIo"/>
                                 </popUpButtonCell>
                                 <constraints>
@@ -1197,7 +1211,7 @@ DQ
                                 </textFieldCell>
                             </textField>
                             <button hidden="YES" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hfe-X4-6kD">
-                                <rect key="frame" x="314" y="62" width="113" height="18"/>
+                                <rect key="frame" x="316" y="63" width="111" height="16"/>
                                 <buttonCell key="cell" type="check" title="Use API Client" bezelStyle="regularSquare" imagePosition="left" inset="2" id="ikY-cg-wxa">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1402,7 +1416,7 @@ DQ
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="272" id="vOj-Cl-53h"/>
                                 </constraints>
                                 <scroller key="horizontalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="BkG-mc-Ugl">
-                                    <rect key="frame" x="1" y="255" width="323" height="16"/>
+                                    <rect key="frame" x="1" y="254" width="323" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="QwH-Pe-tRn">
@@ -1441,7 +1455,7 @@ DQ
                                 <rect key="frame" x="113" y="28" width="52" height="22"/>
                                 <popUpButtonCell key="cell" type="square" title="None" bezelStyle="shadowlessSquare" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" selectedItem="V73-mv-Y27" id="WuD-Am-K0n">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="menu"/>
+                                    <font key="font" metaFont="message"/>
                                     <menu key="menu" id="dAZ-eK-ttG">
                                         <items>
                                             <menuItem title="None" state="on" id="V73-mv-Y27" userLabel="None"/>
@@ -1457,21 +1471,21 @@ DQ
                                 </connections>
                             </popUpButton>
                             <button toolTip="refresh local printer list" translatesAutoresizingMaskIntoConstraints="NO" id="q70-dd-C4Z">
-                                <rect key="frame" x="329" y="345" width="32" height="38"/>
+                                <rect key="frame" x="342.5" y="352" width="19" height="24"/>
                                 <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="arrow.triangle.2.circlepath" catalog="system" imagePosition="only" alignment="center" controlSize="large" imageScaling="proportionallyUpOrDown" inset="2" id="KIf-1U-5Ca">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="32" id="TYq-Co-LEN"/>
-                                    <constraint firstAttribute="width" constant="32" id="f6Z-W2-hN4"/>
+                                    <constraint firstAttribute="height" constant="18" id="TYq-Co-LEN"/>
+                                    <constraint firstAttribute="width" constant="18" id="f6Z-W2-hN4"/>
                                 </constraints>
                                 <connections>
                                     <action selector="refresh_Action:" target="qT6-LQ-JaA" id="Kgn-uA-7qO"/>
                                 </connections>
                             </button>
                             <button toolTip="Add Printer" translatesAutoresizingMaskIntoConstraints="NO" id="2jI-oc-wJJ">
-                                <rect key="frame" x="326" y="16" width="35" height="53.5"/>
+                                <rect key="frame" x="326" y="16" width="35" height="54"/>
                                 <buttonCell key="cell" type="square" title="Add" bezelStyle="shadowlessSquare" image="arrow.forward" catalog="system" imagePosition="above" alignment="center" controlSize="large" imageScaling="proportionallyUpOrDown" inset="2" id="dVo-vZ-bas">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system"/>
@@ -1639,7 +1653,7 @@ DQ
                                     <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="263" id="Prj-bt-DqU"/>
                                 </constraints>
                                 <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="Cfq-mU-7Q4">
-                                    <rect key="frame" x="1" y="423" width="443" height="16"/>
+                                    <rect key="frame" x="1" y="422" width="443" height="17"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="ycQ-CQ-Y8d">
@@ -1758,7 +1772,7 @@ CA
                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     <popUpButtonCell key="cell" type="bevel" title="hidden" bezelStyle="rounded" alignment="center" lineBreakMode="truncatingTail" state="on" imageScaling="proportionallyDown" inset="2" selectedItem="td0-YZ-NTC" id="ixS-KM-84z">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="menu"/>
+                        <font key="font" metaFont="message"/>
                         <menu key="menu" id="Pqy-EH-t8e">
                             <items>
                                 <menuItem title="hidden" state="on" hidden="YES" enabled="NO" id="td0-YZ-NTC">
@@ -1914,10 +1928,10 @@ Gw
                                 </textFieldCell>
                             </textField>
                             <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cn6-dd-JS8">
-                                <rect key="frame" x="31" y="309" width="138" height="40"/>
+                                <rect key="frame" x="36" y="315" width="128" height="28"/>
                                 <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" controlSize="large" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="RFI-ZF-Qn0">
                                     <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="menu"/>
+                                    <font key="font" metaFont="message"/>
                                     <menu key="menu" id="vFr-wk-0TQ"/>
                                 </popUpButtonCell>
                                 <constraints>
@@ -1930,7 +1944,7 @@ Gw
                                 </connections>
                             </popUpButton>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mQ2-dx-WIb">
-                                <rect key="frame" x="33" y="275" width="131" height="23"/>
+                                <rect key="frame" x="36" y="277" width="128" height="20"/>
                                 <buttonCell key="cell" type="check" title="Set as Default" bezelStyle="regularSquare" imagePosition="left" controlSize="large" inset="2" id="is8-pt-Vsd">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -1992,7 +2006,7 @@ Gw
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="8dp-we-zeb">
-                                    <rect key="frame" x="669" y="1" width="16" height="57"/>
+                                    <rect key="frame" x="668" y="1" width="17" height="57"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
@@ -2021,7 +2035,7 @@ Gw
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                                 <scroller key="verticalScroller" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="SbY-La-C0J">
-                                    <rect key="frame" x="669" y="1" width="16" height="57"/>
+                                    <rect key="frame" x="668" y="1" width="17" height="57"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </scroller>
                             </scrollView>
@@ -2037,7 +2051,7 @@ Gw
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="QDJ-FT-d2i">
-                                <rect key="frame" x="652" y="26" width="76" height="40"/>
+                                <rect key="frame" x="658" y="32" width="64" height="28"/>
                                 <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="brx-Bo-ig6">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -2054,7 +2068,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="C6I-La-qfz">
-                                <rect key="frame" x="551" y="26" width="93" height="40"/>
+                                <rect key="frame" x="557" y="32" width="81" height="28"/>
                                 <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uNm-GK-Jmi">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -2224,7 +2238,7 @@ Gw
                                 </constraints>
                             </box>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Q8c-ks-lPZ">
-                                <rect key="frame" x="61" y="153" width="177" height="23"/>
+                                <rect key="frame" x="64" y="155" width="174" height="20"/>
                                 <buttonCell key="cell" type="check" title="Use generic PPD file" bezelStyle="regularSquare" imagePosition="left" controlSize="large" inset="2" id="ykf-it-jvV">
                                     <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -2261,7 +2275,7 @@ Gw
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="yhd-74-NuW">
-                                <rect key="frame" x="652" y="26" width="76" height="40"/>
+                                <rect key="frame" x="658" y="32" width="64" height="28"/>
                                 <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="gvV-Uo-fvM">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -2278,7 +2292,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="L0L-26-slZ">
-                                <rect key="frame" x="551" y="26" width="93" height="40"/>
+                                <rect key="frame" x="557" y="32" width="81" height="28"/>
                                 <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="3en-iL-xdc">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -2295,7 +2309,7 @@ Gw
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="CaH-ZO-G8E">
-                                <rect key="frame" x="58" y="61" width="120" height="40"/>
+                                <rect key="frame" x="64" y="67" width="108" height="28"/>
                                 <buttonCell key="cell" type="push" title="Upload PPD" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="EiS-Vr-9Ce">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -2408,7 +2422,7 @@ Gw
                                 </textFieldCell>
                             </textField>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="c7Q-Xn-aUC">
-                                <rect key="frame" x="652" y="26" width="76" height="40"/>
+                                <rect key="frame" x="658" y="32" width="64" height="28"/>
                                 <buttonCell key="cell" type="push" title="Save" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="IGU-xt-tEq">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -2425,7 +2439,7 @@ DQ
                                 </connections>
                             </button>
                             <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rQT-jd-LOU">
-                                <rect key="frame" x="551" y="26" width="93" height="40"/>
+                                <rect key="frame" x="557" y="32" width="81" height="28"/>
                                 <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" controlSize="large" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="hfs-rc-tFZ">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                     <font key="font" metaFont="system" size="16"/>
@@ -2470,6 +2484,6 @@ Gw
     <resources>
         <image name="NSTrashFull" width="32" height="32"/>
         <image name="arrow.forward" catalog="system" width="15" height="12"/>
-        <image name="arrow.triangle.2.circlepath" catalog="system" width="18" height="15"/>
+        <image name="arrow.triangle.2.circlepath" catalog="system" width="16" height="15"/>
     </resources>
 </document>
