@@ -16,19 +16,22 @@ class PrinterManager {
             return printers
         }
         
+        defer {
+            cupsFreeDests(numDests, destinations)
+        }
+        
         for i in 0..<Int(numDests) {
-            var dest = destinations[i]
-            let name = String(cString: dest.name)
-//            let isDefault = dest.is_default != 0
+            let dest = destinations.advanced(by: i)
+            let name = String(cString: dest.pointee.name)
             
             // Get destination info using the modern API
-            let destInfo = cupsCopyDestInfo(nil, &dest)
+            let destInfo = cupsCopyDestInfo(nil, dest)
             
             // Get printer attributes using cupsGetOption
-            let makeAndModel = getOption("printer-make-and-model", from: dest) ?? ""
-            let info = getOption("printer-info", from: dest) ?? ""
-            let location = getOption("printer-location", from: dest) ?? ""
-            let uri = getOption("device-uri", from: dest)
+            let makeAndModel = getOption("printer-make-and-model", from: dest.pointee) ?? ""
+            let info = getOption("printer-info", from: dest.pointee) ?? ""
+            let location = getOption("printer-location", from: dest.pointee) ?? ""
+            let uri = getOption("device-uri", from: dest.pointee)
             
             // Check for PPD in standard location
             // Modern printers may not have PPDs (driverless/AirPrint)
@@ -61,8 +64,6 @@ class PrinterManager {
                 cupsFreeDestInfo(destInfo)
             }
         }
-        
-        cupsFreeDests(numDests, dests)
         
         return printers
     }
