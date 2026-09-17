@@ -1,0 +1,9 @@
+{
+  "id" : "7e1e931a-cdf1-48c5-82b6-155b07eb53b8",
+  "targets" : [
+    {
+      "id" : "C80A61BF-B788-4D98-86CE-8C04A77A89C3",
+      "name" : "Jamf Printer Manager"
+    }
+  ]
+}

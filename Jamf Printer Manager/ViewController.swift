@@ -18,6 +18,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
     
     @IBOutlet weak var existingPrinters_TableView: NSTableView!
     @IBOutlet var existingPrinters_AC: NSArrayController!
+    @IBOutlet weak var jamfPrinters_Label: NSTextField!
     
     @IBOutlet var context_Button: NSPopUpButton!
     @IBOutlet var categoryContext_Menu: NSMenu!
@@ -152,19 +153,31 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
             let (_, allCategories) = result
             listOfCategories.removeAll()
             categoryContext_Menu.removeAllItems()
-            let subMenu = NSMenu()
-            var displayTitle = ""
+//            let subMenu = NSMenu()
+//            var displayTitle = ""
+            var nameIssues = Set<String>()
             
             if let tmpDict = allCategories as? [String:Any] {
                 let categoryList = tmpDict["categories"] as! [[String:Any]]
                 for theCategory in categoryList {
-                    listOfCategories.append(theCategory["name"] as! String)
+                    if let categoryName = theCategory["name"] as? String {
+                        let trimmedName = categoryName.trimmingCharacters(in: .whitespaces)
+                        listOfCategories.append(categoryName)
+                        // check for trailing spaces
+                        if categoryName != trimmedName {
+                            nameIssues.insert(trimmedName)
+                        }
+                    }
                 }
                 listOfCategories = listOfCategories.sorted{ $0.localizedCompare($1) == .orderedAscending }
                 
                 for theCategory in listOfCategories {
                     categoryContext_Menu.addItem(NSMenuItem(title: "\(theCategory)", action: #selector(updateCategory), keyEquivalent: ""))
                 }
+            }
+            
+            if nameIssues.count > 0 {
+                _ = Alert.shared.display(header: "Attention:", message: "The following categories have leading and/or trailing spaces in their name. This will cause issues if used when uploading a printer.\n\(nameIssues.sorted())", secondButton: "")
             }
             
             NotificationCenter.default.post(name: .loadPrintersNotification, object: self)
@@ -187,6 +200,9 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
 
         var saveCredsState: Int?
         (JamfProServer.displayName, JamfProServer.destination, JamfProServer.username, JamfProServer.password,saveCredsState) = loginInfo
+        if useApiClient == 0 {
+            JamfProServer.tenantId = JamfProServer.destination
+        }
         let jamfUtf8Creds = "\(JamfProServer.username):\(JamfProServer.password)".data(using: String.Encoding.utf8)
         JamfProServer.base64Creds = (jamfUtf8Creds?.base64EncodedString())!
         
@@ -195,22 +211,58 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         WriteToLog.shared.message("----------------------------------------------------------------------------")
         WriteToLog.shared.message("TelemetryDeck: \(userDefaults.bool(forKey: "optOut") ? "disabled" : "enabled")")
         
-        let clientType = ( useApiClient == 0 ) ? "username/password":"API client/secret"
+        let clientType: String
+        switch useApiClient {
+        case 0:  clientType = "Platform API"
+        case 1:  clientType = "API client/secret"
+        case 3:  clientType = "Jamf School (Basic Auth)"
+        default: clientType = "username/password"
+        }
         WriteToLog.shared.message("Authenticating with \(clientType)")
-        TokenDelegate.shared.getToken(serverUrl: JamfProServer.destination, base64creds: JamfProServer.base64Creds) { [self]
+        let tokenServerUrl = (useApiClient == 0) ? JamfProServer.tenantId : JamfProServer.destination
+        TokenDelegate.shared.getToken(serverUrl: tokenServerUrl, base64creds: JamfProServer.base64Creds) { [self]
             authResult in
             let (statusCode,theResult) = authResult
             if theResult == "success" {
                 
-                userDefaults.set(JamfProServer.destination, forKey: "currentServer")
-                userDefaults.set(JamfProServer.username, forKey: "username")
-                
-                self.view.window?.title = "Jamf Printer Manager: \(JamfProServer.destination.fqdnFromUrl)"
-                
+                if useApiClient == 0 {
+                    userDefaults.set(JamfProServer.tenantId, forKey: "lastTenantId")
+                    userDefaults.set(JamfProServer.username,  forKey: "lastClientId")
+                } else {
+                    userDefaults.set(JamfProServer.destination, forKey: "currentServer")
+                    userDefaults.set(JamfProServer.username,    forKey: "username")
+                }
+
+                let titleSuffix = (useApiClient == 0) ? JamfProServer.displayName : JamfProServer.destination.fqdnFromUrl
+                self.view.window?.title = "Jamf Printer Manager: \(titleSuffix)"
+
                 if saveCredsState == 1 {
-                    Credentials.shared.save(service: "\(JamfProServer.destination.fqdnFromUrl)", account: JamfProServer.username, credential: JamfProServer.password)
+                    if useApiClient == 0 {
+                        Credentials.shared.save(service: JamfProServer.tenantId, account: JamfProServer.username, credential: JamfProServer.password)
+                    } else {
+                        Credentials.shared.save(service: "\(JamfProServer.destination.fqdnFromUrl)", account: JamfProServer.username, credential: JamfProServer.password)
+                    }
                 }
                 
+                jamfPrinters_Label.stringValue = (useApiClient == 3) ? "Jamf School printers" : "Jamf Pro printers"
+                if let categoryCol = existingPrinters_TableView.tableColumns.first(where: { $0.headerCell.title == "Category" }) {
+                    categoryCol.isHidden = (useApiClient == 3)
+                }
+                existingPrinters_TableView.doubleAction = (useApiClient == 3) ? nil : #selector(viewSelectObject)
+                existingPrinters_TableView.toolTip = (useApiClient == 3) ? nil : "double click a printer to edit"
+                removePrinter_Button.isHidden = (useApiClient == 3)
+
+                if useApiClient == 3 {
+                    existingPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+                    GetPrintersDelegate.shared.schoolPrinterProfiles { [self] printers in
+                        for printer in printers { existingPrinters_AC.addObject(printer) }
+                        existingPrinters_AC.rearrangeObjects()
+                        NotificationCenter.default.post(name: .loadPrintersNotification, object: self)
+                        spinner_ProgressIndicator.stopAnimation(self)
+                    }
+                    return
+                }
+
                 existingPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
 
                 GetPrintersDelegate.shared.apiAction(method: "GET", theEndpoint: "printers", acceptFormat: "application/json") { [self]
@@ -293,6 +345,7 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         }
         
         NotificationCenter.default.addObserver(self, selector: #selector(addedPrintersNotification(_:)), name: .addedPrintersNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToLoginNotification(_:)), name: .returnToLoginNotification, object: nil)
         
         let app_support_path = NSHomeDirectory() + "/Library/Application Support"
         if !(FileManager.default.fileExists(atPath: app_support_path)) {
@@ -367,6 +420,13 @@ class ViewController: NSViewController, SendingLoginInfoDelegate {
         }
     }
    
+    @objc func returnToLoginNotification(_ notification: Notification) {
+        let tmpArray = existingPrinters_AC.arrangedObjects as! [PrinterInfo]
+        existingPrinters_AC.remove(atArrangedObjectIndexes: IndexSet(0..<tmpArray.count))
+        existingPrintersArray.removeAll()
+        performSegue(withIdentifier: "loginView", sender: nil)
+    }
+
     @objc func addedPrintersNotification(_ notification: Notification) {
         WriteToLog.shared.message("[ViewController] added \(addedPrinterInfo.count) printer(s)")
        existingPrinters_AC.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
@@ -417,4 +477,5 @@ extension ViewController : NSTableViewDataSource, NSTableViewDelegate {
 extension Notification.Name {
     public static let addedPrintersNotification   = Notification.Name("addedPrintersNotification")
     public static let updatedPrintersNotification = Notification.Name("updatedPrintersNotification")
+    public static let returnToLoginNotification   = Notification.Name("returnToLoginNotification")
 }
