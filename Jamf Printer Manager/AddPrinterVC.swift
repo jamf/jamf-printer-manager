@@ -24,6 +24,7 @@ class AddPrinterVC: NSViewController {
     }
     
     @IBOutlet weak var localPrinters_TableView: NSTableView!
+    @IBOutlet weak var category_Label: NSTextField!
     @IBOutlet weak var category_Button: NSPopUpButton!
     @IBOutlet weak var category_Menu: NSMenu!
     @IBAction func category_Action(_ sender: Any) {
@@ -53,9 +54,26 @@ class AddPrinterVC: NSViewController {
     
     @IBOutlet weak var add_Button: NSButton!
     @IBAction func add_Action(_ sender: Any) {
-    
-        selectedPrinterArray.removeAll()
+
         let selectedPrinters = localPrinters_TableView.selectedRowIndexes
+
+        if useApiClient == 3 {
+            guard let firstIndex = selectedPrinters.first else {
+                _ = Alert.shared.display(header: "Attention:", message: "At least one printer must be selected.", secondButton: "")
+                return
+            }
+            localPrintersArray = localPrinters_AC.arrangedObjects as! [PrinterInfo]
+            let printerName = localPrintersArray[firstIndex].name
+            let sb = NSStoryboard(name: "Main", bundle: nil)
+            if let vc = sb.instantiateController(withIdentifier: "JamfSchoolPrinterSettingsVC") as? JamfSchoolPrinterSettingsVC {
+                vc.printerDisplayName = printerName
+                vc.selectedPrinter    = localPrintersArray[firstIndex]
+                presentAsSheet(vc)
+            }
+            return
+        }
+
+        selectedPrinterArray.removeAll()
         if selectedPrinters.count < 1 {
             _ = Alert.shared.display(header: "Attention:", message: "At least one printer must be selected.", secondButton: "")
         } else {
@@ -121,6 +139,19 @@ class AddPrinterVC: NSViewController {
             if arrayIndex == selectedPrinters.count-1 {
                 add_Button.isEnabled = true
                 localPrintersArray = localPrinters_AC.arrangedObjects as! [PrinterInfo]
+
+                if added > 0 {
+                    let clientType: String
+                    switch useApiClient {
+                    case 0:  clientType = "Platform API"
+                    case 1:  clientType = "Jamf Pro API Client"
+                    default: clientType = "Jamf Pro Classic"
+                    }
+                    Task { @MainActor in
+                        TelemetryDeckSignal.shared.send("printerCreated",
+                            parameters: ["clientType": clientType, "count": "\(added)"])
+                    }
+                }
 
                 addedPrinterInfo = selectedPrinterArray
                 NotificationCenter.default.post(name: .addedPrintersNotification, object: nil)
@@ -219,6 +250,7 @@ class AddPrinterVC: NSViewController {
         super.viewDidLoad()
         
         NotificationCenter.default.addObserver(self, selector: #selector(loadPrintersNotification(_:)), name: .loadPrintersNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(returnToLoginNotification(_:)), name: .returnToLoginNotification, object: nil)
         
         localPrinters_TableView.doubleAction = #selector(addSelectObject)
         
@@ -233,7 +265,16 @@ class AddPrinterVC: NSViewController {
     }
     
     @objc func loadPrintersNotification(_ notification: Notification) {
-        loadPrinters()
+        DispatchQueue.main.async { [weak self] in self?.loadPrinters() }
+    }
+
+    @objc func returnToLoginNotification(_ notification: Notification) {
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            let range = IndexSet(0..<(localPrinters_AC.arrangedObjects as! [PrinterInfo]).count)
+            localPrinters_AC.remove(atArrangedObjectIndexes: range)
+            localPrintersArray.removeAll()
+        }
     }
     
     func loadPrinters() {
@@ -252,6 +293,26 @@ class AddPrinterVC: NSViewController {
             }
         }
         category_Button.selectItem(withTitle: lastCategory)
+
+        let isSchool = (useApiClient == 3)
+        category_Label.isHidden  = isSchool
+        category_Button.isHidden = isSchool
+        localPrinters_TableView.enclosingScrollView?.toolTip = isSchool ? nil : "lists only printers not in Jamf Pro"
+        if isSchool {
+            let cfg = NSImage.SymbolConfiguration(pointSize: 22, weight: .regular)
+            add_Button.image = NSImage(systemSymbolName: "document.badge.gearshape", accessibilityDescription: nil)?
+                .withSymbolConfiguration(cfg)
+        } else {
+            add_Button.image = NSImage(systemSymbolName: "arrow.forward", accessibilityDescription: nil)
+        }
+        add_Button.imagePosition = .imageAbove
+        add_Button.title         = isSchool ? "Create" : "Add"
+        add_Button.toolTip       = isSchool ? "create a driver package and profile" : "Add Printer"
+        for c in add_Button.constraints where c.secondItem == nil {
+            if c.firstAttribute == .width  { c.constant = isSchool ? 41 : 35 }
+            if c.firstAttribute == .height { c.constant = isSchool ? 72 : 52 }
+        }
+
         if loginAction == "changeServer" {
             refresh_Action(self)
             loginAction = ""

@@ -30,7 +30,7 @@ var appsGroupId            = "483DWKW443.jamfie.SharedJPMA"
 let sharedDefaults         = UserDefaults(suiteName: appsGroupId)
 let sharedContainerUrl     = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: appsGroupId)
 let sharedSettingsPlistUrl = (sharedContainerUrl?.appendingPathComponent("Library/Preferences/\(appsGroupId).plist"))!
-var useApiClient           = 0
+var useApiClient           = 2
 
 var isDarkMode: Bool {
     let mode = userDefaults.string(forKey: "AppleInterfaceStyle")
@@ -99,6 +99,9 @@ struct JamfProServer {
     static var stickySession = true
     static var url           = ""
     static var useApiClient  = 0
+    static var tenantId      = ""
+    static var region        = "us"
+    static var serverURL     = ""
 }
 
 struct Token {
