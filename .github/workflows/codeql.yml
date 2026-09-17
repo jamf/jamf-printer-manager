@@ -1,0 +1,42 @@
+name: CodeQL
+
+  on:
+    push:
+      branches: [ main ]
+    pull_request:
+      branches: [ main ]
+    schedule:
+      - cron: '0 8 * * 1'
+
+  jobs:
+    analyze:
+      name: Analyze (swift)
+      runs-on: macos-latest
+      permissions:
+        security-events: write
+        actions: read
+        contents: read
+
+      steps:
+        - uses: actions/checkout@v4
+
+        - name: Initialize CodeQL
+          uses: github/codeql-action/init@v3
+          with:
+            languages: swift
+            build-mode: manual
+
+        - name: Build
+          run: |
+            xcodebuild build \
+              -project "Jamf Printer Manager.xcodeproj" \
+              -target "Jamf Printer Manager" \
+              -configuration Release \
+              -derivedDataPath "$RUNNER_TEMP/DerivedData" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO
+
+        - name: Perform CodeQL Analysis
+          uses: github/codeql-action/analyze@v3
+          with:
+            category: /language:swift
