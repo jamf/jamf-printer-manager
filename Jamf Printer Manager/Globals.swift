@@ -5,7 +5,6 @@
 import Cocoa
 import Foundation
 
-
 var addedPrinterInfo        = [PrinterInfo]()
 var bookmarkError           = false
 var listOfCategories        = [String]()
