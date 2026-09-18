@@ -2,7 +2,6 @@
 //  Copyright 2026, Jamf
 //
 
-
 import Cocoa
 import Foundation
 import UniformTypeIdentifiers
@@ -16,7 +15,6 @@ class PrinterInfoTabVC: NSViewController, NSWindowDelegate, NSTextFieldDelegate,
     func updatedPrinterInfo(newValues: PrinterInfo) {
         editPrinterInfo = newValues
     }
-    
     
     var delegate: UpdatePrinterInfoDelegate? = nil
     

@@ -2,7 +2,6 @@
 //  Copyright 2026, Jamf
 //
 
-
 import Cocoa
 import Foundation
 
