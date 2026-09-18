@@ -145,10 +145,6 @@ Temporary Items
 # gitignore contributors: remember to update Global/Xcode.gitignore, Objective-C.gitignore & Swift.gitignore
 
 
-
-
-
-
 ## Playgrounds
 timeline.xctimeline
 playground.xcworkspace
@@ -208,3 +204,5 @@ Dependencies/
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.toptal.com/developers/gitignore/api/swift,xcode,C,objective-c,osx
+
+**/Notes/
